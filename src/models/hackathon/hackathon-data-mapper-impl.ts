@@ -22,7 +22,7 @@ export class HackathonDataMapperImpl extends GenericDataMapper
   public readonly UPDATE: string = 'hackathon:update';
   public readonly READ_ALL: string = 'hackathon:readall';
   public readonly COUNT: string = 'hackathon:count';
-  public tableName: string = 'HACKATHON';
+  public tableName: string = 'HACKATHONS';
 
   protected pkColumnName: string = 'uid';
 

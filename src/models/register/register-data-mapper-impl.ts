@@ -27,7 +27,7 @@ export class RegisterDataMapperImpl extends GenericDataMapper
   public UPDATE: string = 'registration:update';
   public COUNT: string = 'registration:count';
 
-  public tableName: string = 'REGISTRATION';
+  public tableName: string = 'REGISTRATIONS';
   protected pkColumnName: string = 'uid';
 
   constructor(
@@ -115,7 +115,7 @@ export class RegisterDataMapperImpl extends GenericDataMapper
       .join(
         this.activeHackathonDataMapper.tableName,
         'hackathon',
-        'registration.hackathon = hackathon.uid',
+        'registration.hackathon_id = hackathon.hackathon_id',
       );
     if (opts && opts.fields) {
       queryBuilder = queryBuilder
@@ -138,7 +138,7 @@ export class RegisterDataMapperImpl extends GenericDataMapper
     if (opts && opts.byHackathon) {
       queryBuilder = queryBuilder
         .where(
-          'hackathon.uid = ?',
+          'hackathon.hackathon_id = ?',
           await (opts.hackathon ?
             Promise.resolve(opts.hackathon) :
             this.activeHackathonDataMapper.activeHackathon

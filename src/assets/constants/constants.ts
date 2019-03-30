@@ -18,6 +18,7 @@ export class Constants {
     socketPath: `/cloudsql/${Util.readEnv('INSTANCE_CONNECTION_NAME', '')}`,
     timeout: 60 * 60 * 1000,
     typeCast: function castField(field, useDefaultTypeCasting) {
+
       // We only want to cast bit fields that have a single-bit in them. If the field
       // has more than one bit, then we cannot assume it is supposed to be a Boolean.
       if ((field.type === 'BIT') && (field.length === 1)) {
@@ -32,6 +33,18 @@ export class Constants {
         // For TINYINT, which is used as a boolean in the database
         // Convert it to boolean value
         return field.string() === '1';
+      }
+      if (field.type === 'TIMESTAMP') {
+        const dateString = field.string();
+        if (dateString === null) {
+          return null;
+        }
+        const dt = new Date(dateString);
+        if (isNaN(dt.getTime())) {
+          return dateString;
+        }
+
+        return dt.getTime();
       }
       return (useDefaultTypeCasting());
     },
