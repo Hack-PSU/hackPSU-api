@@ -15,13 +15,7 @@ import { IUowOpts } from '../services/database/svc/uow.service';
 
 // TODO: Refactor this to retrieve email template from cloud storage?
 const EMAIL_TEMPLATE_PATH = '../assets/emails/email_template.html';
-const REGISTRATION_EMAIL_BODY = '../assets/emails/registration_body.html';
-const emailTemplate = fs.readFileSync(path.join(__dirname, EMAIL_TEMPLATE_PATH), 'utf-8');
-const registrationEmailBody = fs.readFileSync(
-  path.join(__dirname, REGISTRATION_EMAIL_BODY),
-  'utf-8',
-);
-const emailHtml = emailTemplate.replace('$$BODY$$', registrationEmailBody);
+const emailHtml = fs.readFileSync(path.join(__dirname, EMAIL_TEMPLATE_PATH), 'utf-8');
 
 export interface IRegistrationProcessor {
   processRegistration(registration: Registration): Promise<ResponseBody>;

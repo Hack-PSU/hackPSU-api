@@ -9,7 +9,7 @@ export class FeatureFlagService {
   private readonly featureFlags: Map<FeatureFlag, boolean>;
 
   constructor() {
-    const path = '../../../assets/constants/feature_flags.json';
+    const path = '../../../feature_flags.json';
     const fileExists = fs.existsSync(path);
     this.initialized = false;
     if (fileExists) {

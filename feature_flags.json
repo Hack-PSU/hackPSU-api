@@ -1,0 +1,5 @@
+{
+  "onesignal_notifications": true,
+  "sendgrid_registration_email_confirmation": true,
+  "sendgrid_email_service_active": true
+}
