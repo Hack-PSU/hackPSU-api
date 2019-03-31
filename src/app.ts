@@ -1,13 +1,3 @@
-// Setup cloud specific trace and debug
-import * as debugAgent from '@google-cloud/debug-agent';
-import * as traceAgent from '@google-cloud/trace-agent';
-import { Environment, Util } from './JSCommon/util';
-if (Util.getCurrentEnv() !== Environment.TEST) {
-  // @ts-ignore
-  traceAgent.start();
-  // @ts-ignore
-  debugAgent.start();
-}
 import * as bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -17,7 +7,8 @@ import helmet from 'helmet';
 import * as path from 'path';
 import * as requestContext from 'request-context';
 import 'source-map-support/register';
-import { HttpError } from './JSCommon/errors';
+import { HttpError } from './js-common/errors';
+import { Environment, Util } from './js-common/util';
 import { ParentRouter, ResponseBody } from './router/router-types';
 import { ScannerController } from './router/routes/scanner/scanner';
 import { ExpressProvider } from './services/common/injector/providers';

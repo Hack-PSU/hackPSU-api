@@ -1,7 +1,7 @@
 import { Injectable } from 'injection-js';
 import { createPool, Pool, PoolConnection } from 'mysql';
 import { Constants } from '../../../assets/constants/constants';
-import { Util } from '../../../JSCommon/util';
+import { Util } from '../../../js-common/util';
 import { IConnectionFactory } from './connection-factory';
 
 @Injectable()

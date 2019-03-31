@@ -1,6 +1,6 @@
 import * as firebase from 'firebase-admin';
 import { Inject, Injectable } from 'injection-js';
-import { Environment, Util } from '../../../JSCommon/util';
+import { Environment, Util } from '../../../js-common/util';
 import { Logger } from '../../logging/logging';
 import { IRtdbFactory } from '../connection/rtdb-factory';
 import { IUow } from './uow.service';

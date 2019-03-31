@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Injectable } from 'injection-js';
 import { IExpressController, ResponseBody } from '../..';
-import { HttpError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { HttpError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import { IAdminStatisticsDataMapper, IUserStatistics } from '../../../models/admin/statistics';
 import { IActiveHackathonDataMapper } from '../../../models/hackathon/active-hackathon';
 import { IRegisterDataMapper } from '../../../models/register';
@@ -44,56 +44,34 @@ export class ScannerController extends AbstractScannerController implements IExp
       '/assign',
       (req, res, next) => this.verifyScannerPermissionsMiddleware(req, res, next, AclOperations.CREATE),
       (req, res, next) => this.addRfidAssignments(req, res, next),
-    );
-    app.post(
-      '/scan',
-      (req, res, next) => this.verifyScannerPermissionsMiddleware(
-        req,
-        res,
-        next,
-        AclOperations.CREATE,
-      ),
-      (req, res, next) => this.addScans(req, res, next),
-    );
-    app.post(
+    ).post(
       '/register',
       (req, res, next) => this.confirmRegisterScannerHandler(req, res, next),
-    );
-    app.get(
+    ).get(
       '/register',
       (req, res, next) => this.authService.authenticationMiddleware(req, res, next),
       this.authService.verifyAcl(this.scannerAcl, AclOperations.CREATE),
       (req, res, next) => this.registerNewScannerHandler(res, next),
-    );
-    app.get(
+    ).post(
+      '/scan',
+      (req, res, next) => this.verifyScannerPermissionsMiddleware(req, res, next, AclOperations.CREATE),
+      (req, res, next) => this.addScans(req, res, next),
+    ).get(
       '/events',
-      (req, res, next) => this.verifyScannerPermissionsMiddleware(
-        req,
-        res,
-        next,
-        AclOperations.READ_ALL,
-      ),
+      (req, res, next) => this.verifyScannerPermissionsMiddleware(req, res, next, AclOperations.READ_ALL),
       (req, res, next) => this.getNextEventsHandler(req, res, next),
-    );
-    app.get(
-      '/registrations',
+    ).get(
+      '/hackers',
       (req, res, next) => this.verifyScannerPermissionsMiddleware(req, res, next, AclOperations.READ_ALL),
       (req, res, next) => this.getAllRegistrationsHandler(res, next),
-    );
-    app.get(
+    ).get(
       '/user',
       (req, res, next) => this.verifyScannerPermissionsMiddleware(req, res, next, AclOperations.READ_ALL),
       (req, res, next) => this.getUserByRfidBand(req, res, next),
       (req, res, next) => this.getUserByRfidBandHandler(req, res, next),
-    );
-    app.get(
-      '/getpin',
-      (req, res, next) => this.verifyScannerPermissionsMiddleware(
-        req,
-        res,
-        next,
-        AclOperations.READ_ALL,
-      ),
+    ).get(
+      '/pin',
+      (req, res, next) => this.verifyScannerPermissionsMiddleware(req, res, next, AclOperations.READ_ALL),
       (req, res, next) => this.getUserByCurrentPin(req, res, next),
     );
   }
@@ -264,7 +242,7 @@ export class ScannerController extends AbstractScannerController implements IExp
   }
 
   /**
-   * @api {get} /scanner/registrations Obtain all registrations
+   * @api {get} /scanner/hackers Obtain all registrations
    * @apiVersion 2.0.0
    * @apiName Obtain all registrations (Scanner)
    * @apiGroup Admin Scanner
@@ -340,7 +318,7 @@ export class ScannerController extends AbstractScannerController implements IExp
   }
 
   /**
-   * @api {get} /scanner/getpin Get a user's registration by their pin
+   * @api {get} /scanner/pin Get a user's registration by their pin
    * @apiVersion 2.0.0
    * @apiName Get User by Pin (Scanner)
    * @apiParam pin {number} current pin for the registration

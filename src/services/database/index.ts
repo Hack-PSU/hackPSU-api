@@ -1,4 +1,4 @@
-import { ICompoundHackathonUidType, Omit, UidType } from '../../JSCommon/common-types';
+import { ICompoundHackathonUidType, Omit, UidType } from '../../js-common/common-types';
 import { IUowOpts } from './svc/uow.service';
 
 export interface IDataMapper<T> {

@@ -1,5 +1,5 @@
 import { RateLimiter as TokenBucket } from 'limiter';
-import { HttpError } from '../../../JSCommon/errors';
+import { HttpError } from '../../../js-common/errors';
 
 export class RateLimiter {
   private tokenBucket: TokenBucket;

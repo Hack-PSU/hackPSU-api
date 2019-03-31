@@ -1,19 +1,18 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Injectable } from 'injection-js';
 import { IExpressController, ResponseBody } from '../..';
-import { HttpError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { HttpError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import {
   IAdminStatisticsDataMapper, IUserCount, IUserStatistics,
 } from '../../../models/admin/statistics';
 import { IAttendanceDataMapper } from '../../../models/attendance/attendance-data-mapper-impl';
-import { IExtraCreditDataMapper } from '../../../models/extra-credit';
 import {
   IPreRegisterDataMapper,
   IRegisterDataMapper,
 } from '../../../models/register';
 import { IRegistrationStats } from '../../../models/register/registration';
-import { Rsvp } from '../../../models/RSVP/rsvp';
+import { Rsvp } from '../../../models/rsvp/rsvp';
 import { IScannerDataMapper } from '../../../models/scanner';
 import { IFirebaseAuthService } from '../../../services/auth/auth-types';
 import { AclOperations, IAclPerm } from '../../../services/auth/RBAC/rbac-types';
@@ -34,7 +33,6 @@ export class AdminStatisticsController extends ParentRouter implements IExpressC
     @Inject('IRegisterDataMapper') private readonly registerDataMapper: IRegisterDataMapper,
     @Inject('IPreRegisterDataMapper') private readonly preRegDataMapper: IPreRegisterDataMapper,
     @Inject('IScannerDataMapper') private readonly scannerDataMapper: IScannerDataMapper,
-    @Inject('IExtraCreditDataMapper') private readonly extraCreditDataMapper: IExtraCreditDataMapper,
     @Inject('BunyanLogger') private readonly logger: Logger,
   ) {
     super();
@@ -115,7 +113,7 @@ export class AdminStatisticsController extends ParentRouter implements IExpressC
   }
 
   /**
-   * @api {get} /admin/data/?type=stats_count Get number of users by interaction type (Pre registration, Registration, RSVP, Event scans)
+   * @api {get} /admin/data/?type=stats_count Get number of users by interaction type (Pre registration, Registration, rsvp, Event scans)
    * @apiVersion 2.0.0
    * @apiName Get User Count
    * @apiGroup Admin Statistics
@@ -123,7 +121,7 @@ export class AdminStatisticsController extends ParentRouter implements IExpressC
    *
    * @apiUse AuthArgumentRequired
    *
-   * @apiSuccess {number[]} number of all users in each category (PreRegistration, Registration, RSVP, Scans)
+   * @apiSuccess {number[]} number of all users in each category (PreRegistration, Registration, rsvp, Scans)
    * @apiUse ResponseBodyDescription
    * @apiUse RequestOpts
    */
@@ -257,37 +255,9 @@ export class AdminStatisticsController extends ParentRouter implements IExpressC
   }
 
   /**
-   * @api {get} /admin/data/?type=extra_credit_assignments Get all extra credit assignments
+   * @api {get} /admin/data/?type=rsvp Get all rsvp'ed users
    * @apiVersion 2.0.0
-   * @apiName Get Extra Credit Assignments
-   * @apiGroup Admin Statistics
-   * @apiPermission TeamMemberPermission
-   *
-   * @apiUse AuthArgumentRequired
-   *
-   * @apiSuccess {ExtraCreditAssignment[]} Array of Wristband assignments
-   * @apiUse ResponseBodyDescription
-   * @apiUse RequestOpts
-   */
-  private async getExtraCreditAssignments(res: Response, next: NextFunction) {
-    try {
-      const result = await this.extraCreditDataMapper.getAll({
-        byHackathon: !res.locals.allHackathons,
-        count: res.locals.limit,
-        hackathon: res.locals.hackathon,
-        startAt: res.locals.offset,
-      });
-      const response = new ResponseBody('Success', 200, result);
-      return this.sendResponse(res, response);
-    } catch (error) {
-      return Util.errorHandler500(error, next);
-    }
-  }
-
-  /**
-   * @api {get} /admin/data/?type=rsvp Get all RSVP'ed users
-   * @apiVersion 2.0.0
-   * @apiName Get RSVP
+   * @apiName Get rsvp
    * @apiGroup Admin Statistics
    * @apiPermission TeamMemberPermission
    *
@@ -313,9 +283,9 @@ export class AdminStatisticsController extends ParentRouter implements IExpressC
   }
 
   /**
-   * @api {get} /admin/data/?type=rsvp_count Get number of RSVP'ed users
+   * @api {get} /admin/data/?type=rsvp_count Get number of rsvp'ed users
    * @apiVersion 2.0.0
-   * @apiName Get RSVP Count
+   * @apiName Get rsvp Count
    * @apiGroup Admin Statistics
    * @apiPermission TeamMemberPermission
    *
@@ -461,8 +431,6 @@ export class AdminStatisticsController extends ParentRouter implements IExpressC
         return this.getScansHandler(res, next);
       case 'wid_assignments':
         return this.getWidAssignments(res, next);
-      case 'extra_credit_assignments':
-        return this.getExtraCreditAssignments(res, next);
       case 'rsvp_count':
         return this.getRsvpCountHandler(res, next);
       case 'attendance':

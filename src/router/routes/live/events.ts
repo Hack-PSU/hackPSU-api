@@ -1,7 +1,7 @@
 import express from 'express';
 import { Inject, Injectable } from 'injection-js';
-import { HttpError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { HttpError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import { Event } from '../../../models/event/event';
 import { IFirebaseAuthService } from '../../../services/auth/auth-types/';
 import { AclOperations, IAclPerm } from '../../../services/auth/RBAC/rbac-types';
@@ -43,13 +43,13 @@ export class EventsController extends LiveController {
         this.authService.verifyAcl(this.aclPerm, AclOperations.CREATE),
         (req, res, next) => this.postEventHandler(req, res, next),
       )
-      .post(
-        '/update',
+      .put(
+        '/',
         this.authService.verifyAcl(this.aclPerm, AclOperations.UPDATE),
         (req, res, next) => this.updateEventHandler(req, res, next),
       )
-      .post(
-        '/delete',
+      .delete(
+        '/',
         this.authService.verifyAcl(this.aclPerm, AclOperations.DELETE),
         (req, res, next) => this.deleteEventHandler(req, res, next),
       );
@@ -57,7 +57,7 @@ export class EventsController extends LiveController {
 
   /**
    * Delete an event
-   * @api {post} /live/events/delete Delete an existing event
+   * @api {delete} /live/events/ Delete an existing event
    * @apiVersion 2.0.0
    * @apiName Update Event
    * @apiGroup Events
@@ -87,7 +87,7 @@ export class EventsController extends LiveController {
 
   /**
    * Updates an existing event
-   * @api {post} /live/events/update Update an existing event
+   * @api {put} /live/events/ Update an existing event
    * @apiVersion 2.0.0
    * @apiName Update Event
    * @apiGroup Events

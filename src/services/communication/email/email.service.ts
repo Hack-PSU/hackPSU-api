@@ -1,5 +1,5 @@
 import * as request from 'request';
-import { EmailReplacementError } from '../../../JSCommon/errors';
+import { EmailReplacementError } from '../../../js-common/errors';
 import { IEmailData } from './email-types';
 
 export interface IEmailService {

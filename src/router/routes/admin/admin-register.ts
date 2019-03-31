@@ -2,9 +2,9 @@ import { validate } from 'email-validator';
 import { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Injectable } from 'injection-js';
 import { IExpressController, ResponseBody } from '../..';
-import { UidType } from '../../../JSCommon/common-types';
-import { HttpError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { UidType } from '../../../js-common/common-types';
+import { HttpError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import { IActiveHackathonDataMapper } from '../../../models/hackathon/active-hackathon';
 import { IRegisterDataMapper } from '../../../models/register';
 import { Registration } from '../../../models/register/registration';
@@ -37,8 +37,8 @@ export class AdminRegisterController extends ParentRouter implements IExpressCon
       this.authService.verifyAcl(this.acl, [AclOperations.READ_ALL, AclOperations.READ]),
       (req, res, next) => this.getAllRegistrationHandler(req, res, next),
     );
-    app.post(
-      '/update',
+    app.put(
+      '/',
       this.authService.verifyAcl(this.acl, AclOperations.UPDATE),
       (req, res, next) => this.updateRegistrationHandler(req, res, next),
     );
@@ -137,7 +137,7 @@ export class AdminRegisterController extends ParentRouter implements IExpressCon
   }
 
   /**
-   * @api {post} /admin/register/update Update an existing registration
+   * @api {put} /admin/register/ Update an existing registration
    * @apiVersion 2.0.0
    * @apiName Update Registration
    * @apiGroup Admin Registration

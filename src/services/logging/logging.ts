@@ -5,7 +5,7 @@ import { Request } from 'express';
 import { Injectable } from 'injection-js';
 import 'reflect-metadata';
 import * as requestContext from 'request-context';
-import { Util } from '../../JSCommon/util';
+import { Util } from '../../js-common/util';
 const { express } = require('@google-cloud/logging-bunyan');
 
 const LOGGER_NAME = 'hackpsu-api';

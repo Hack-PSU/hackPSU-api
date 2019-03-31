@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { UidType } from '../../JSCommon/common-types';
+import { UidType } from '../../js-common/common-types';
 import { AuthLevel } from '../../services/auth/auth-types';
 import { IDbResult } from '../../services/database';
 import { AdminDataMapperImpl } from './admin-data-mapper-impl';

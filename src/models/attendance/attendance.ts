@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { EpochNumber, UidType } from '../../JSCommon/common-types';
+import { EpochNumber, UidType } from '../../js-common/common-types';
 import BaseObject from '../BaseObject';
 import { EventType } from '../event/event';
 

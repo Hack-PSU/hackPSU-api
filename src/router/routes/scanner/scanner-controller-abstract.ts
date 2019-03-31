@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { map } from 'rxjs/operators';
-import { UidType } from '../../../JSCommon/common-types';
-import { HttpError } from '../../../JSCommon/errors';
-import { Environment, Util } from '../../../JSCommon/util';
+import { UidType } from '../../../js-common/common-types';
+import { HttpError } from '../../../js-common/errors';
+import { Environment, Util } from '../../../js-common/util';
 import { IActiveHackathonDataMapper } from '../../../models/hackathon/active-hackathon';
 import { IRegisterDataMapper } from '../../../models/register';
 import { Registration } from '../../../models/register/registration';

@@ -1,7 +1,7 @@
 import express from 'express';
 import { Inject, Injectable } from 'injection-js';
-import { HttpError, RouteNotImplementedError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { HttpError, RouteNotImplementedError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import { IUpdateDataMapper } from '../../../models/update';
 import { Update } from '../../../models/update/update';
 import { IUpdateProcessor } from '../../../processors/update-processor';
@@ -46,13 +46,13 @@ export class UpdatesController extends LiveController {
         this.authService.verifyAcl(this.acl, AclOperations.CREATE),
         (req, res, next) => this.postUpdateHandler(req, res, next),
       )
-      .post(
-        '/update',
+      .put(
+        '/',
         this.authService.verifyAcl(this.acl, AclOperations.UPDATE),
         (req, res, next) => this.updateEventHandler(req, res, next),
       )
-      .post(
-        '/delete',
+      .delete(
+        '/',
         this.authService.verifyAcl(this.acl, AclOperations.DELETE),
         (req, res, next) => this.deleteEventHandler(req, res, next),
       );

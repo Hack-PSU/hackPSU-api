@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { UidType } from '../../../JSCommon/common-types';
+import { UidType } from '../../../js-common/common-types';
 import { IDataMapper, IDbResult } from '../../../services/database';
 // import { IHackathonDataMapper } from '../index';
 import { ActiveHackathon } from './active-hackathon';

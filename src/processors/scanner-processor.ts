@@ -1,6 +1,6 @@
 import { Inject, Injectable } from 'injection-js';
 import moment, { unitOfTime } from 'moment';
-import { HttpError } from '../JSCommon/errors';
+import { HttpError } from '../js-common/errors';
 import { Event } from '../models/event/event';
 import { IActiveHackathonDataMapper } from '../models/hackathon/active-hackathon';
 import { IRegisterDataMapper } from '../models/register';
@@ -84,28 +84,7 @@ export class ScannerProcessor implements IScannerProcessor {
       const assignments: RfidAssignment[] = inputAssignments.map(
         assignment => new RfidAssignment(assignment));
       const result = await this.scannerDataMapper.addRfidAssignments(assignments);
-      const responseResult = result.data.map((idbResult) => {
-        switch (idbResult.result) {
-          case 'Error':
-            return new ResponseBody(idbResult.result, 500, idbResult);
-          case 'Duplicate detected':
-            return new ResponseBody(idbResult.result, 409, idbResult);
-          case 'Bad input':
-            return new ResponseBody(idbResult.result, 400, idbResult);
-          default:
-            return new ResponseBody(idbResult.result, 200, { result: 'Success', data: undefined });
-        }
-      });
-      // Find response status to send
-      const status = responseResult.reduce(
-        (previousStatus: { status: number, response: string }, currentResponse: ResponseBody): { status: number, response: string } => {
-          if (previousStatus.status !== currentResponse.status) {
-            return { status: 207, response: 'Multi-status' };
-          }
-          return { status: currentResponse.status, response: currentResponse.api_response };
-        },
-        { status: responseResult[0].status, response: responseResult[0].api_response },
-      );
+      const { responseResult, status } = this.getBatchProcessResult(result);
 
       response = new ResponseBody(
         'Success',
@@ -155,28 +134,7 @@ export class ScannerProcessor implements IScannerProcessor {
       const scans: Scan[] = inputScans.map(
         scan => new Scan(scan));
       const result = await this.scannerDataMapper.addScans(scans);
-      const responseResult = result.data.map((idbResult) => {
-        switch (idbResult.result) {
-          case 'Error':
-            return new ResponseBody(idbResult.result, 500, idbResult);
-          case 'Duplicate detected':
-            return new ResponseBody(idbResult.result, 409, idbResult);
-          case 'Bad input':
-            return new ResponseBody(idbResult.result, 400, idbResult);
-          default:
-            return new ResponseBody(idbResult.result, 200, { result: 'Success', data: undefined });
-        }
-      });
-      // Find response status to send
-      const status = responseResult.reduce(
-        (previousStatus: { status: number, response: string }, currentResponse: ResponseBody): { status: number, response: string } => {
-          if (previousStatus.status !== currentResponse.status) {
-            return { status: 207, response: 'Multi-status' };
-          }
-          return { status: currentResponse.status, response: currentResponse.api_response };
-        },
-        { status: responseResult[0].status, response: responseResult[0].api_response },
-      );
+      const { responseResult, status } = this.getBatchProcessResult(result);
 
       response = new ResponseBody(
         'Success',
@@ -235,6 +193,39 @@ export class ScannerProcessor implements IScannerProcessor {
       'Success',
       200,
       registration,
+    );
+  }
+
+  private getBatchProcessResult(result) {
+    const responseResult: ResponseBody[] = result.data.map((idbResult) => {
+      switch (idbResult.result) {
+        case 'Error':
+          return new ResponseBody(idbResult.result, 500, idbResult);
+        case 'Duplicate detected':
+          return new ResponseBody(idbResult.result, 409, idbResult);
+        case 'Bad input':
+          return new ResponseBody(idbResult.result, 400, idbResult);
+        default:
+          return new ResponseBody(idbResult.result, 200, { result: 'Success', data: undefined });
+      }
+    });
+    // Find response status to send
+    const status = this.getResponseStatus(responseResult);
+    return { responseResult, status };
+  }
+
+  private getResponseStatus(responseResult): { status: number, response: string } {
+    return responseResult.reduce(
+      (
+        previousStatus: { status: number, response: string },
+        currentResponse: ResponseBody,
+      ): { status: number, response: string } => {
+        if (previousStatus.status !== currentResponse.status) {
+          return { status: 207, response: 'Multi-status' };
+        }
+        return { status: currentResponse.status, response: currentResponse.api_response };
+      },
+      { status: responseResult[0].status, response: responseResult[0].api_response },
     );
   }
 }

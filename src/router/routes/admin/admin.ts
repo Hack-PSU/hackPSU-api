@@ -2,14 +2,14 @@ import { validate } from 'email-validator';
 import { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Injectable } from 'injection-js';
 import { IExpressController, ResponseBody } from '../..';
-import { HttpError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { HttpError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import { IAdminDataMapper } from '../../../models/admin';
-import { ExtraCreditAssignment } from '../../../models/extra-credit/extra-credit-assignment';
 import { IAdminProcessor } from '../../../processors/admin-processor';
 import { IFirebaseAuthService } from '../../../services/auth/auth-types';
 import { AclOperations, IAclPerm, IAdminAclPerm } from '../../../services/auth/RBAC/rbac-types';
-import { IDataMapper } from '../../../services/database';
+import { FeatureFlagService } from '../../../services/common/feature-flags/feature-flag-service';
+import { FeatureFlag } from '../../../services/common/feature-flags/feature-flags-types';
 import { ParentRouter } from '../../router-types';
 
 @Injectable()
@@ -50,8 +50,8 @@ export class AdminController extends ParentRouter implements IExpressController 
     @Inject('IAdminDataMapper') private readonly adminDataMapper: IAdminDataMapper,
     @Inject('IAdminDataMapper') private readonly adminAcl: IAdminAclPerm,
     @Inject('IAdminProcessor') private readonly adminProcessor: IAdminProcessor,
-    @Inject('IExtraCreditDataMapper') private readonly extraCreditDataMapper: IDataMapper<ExtraCreditAssignment>,
     @Inject('IExtraCreditDataMapper') private readonly extraCreditAcl: IAclPerm,
+    @Inject('FeatureFlagService') private readonly featureFlagService: FeatureFlagService,
   ) {
     super();
     this.router = Router();
@@ -63,7 +63,6 @@ export class AdminController extends ParentRouter implements IExpressController 
       return;
     }
     // Use authentication
-    app.use('/checkout', Util.getInstance('AdminCheckoutController').router);
     app.use((req, res, next) => this.authService.authenticationMiddleware(req, res, next));
     app.use((req, res, next) => AdminController.parseCommonRequestFields(req, res, next));
     AdminController.registerRouter('register', 'AdminRegisterController', 2);
@@ -171,7 +170,7 @@ export class AdminController extends ParentRouter implements IExpressController 
    *                        },
    *                        {...},
    *                        ...],
-   *                    fromEmail: "IEmail address send from and reply to. *NOTE: email are case sensitive"
+   *                    fromEmail: "Email address send from and reply to. *NOTE: email are case sensitive"
    *                    subject: "generic email",
    *                    html: "<html><head><body>.....</body></head></html>"
    *                  }
@@ -179,13 +178,18 @@ export class AdminController extends ParentRouter implements IExpressController 
    * @apiSuccess (207) {Object[]} Partial-Success An array of success responses as well as failure objects
    * @apiUse ResponseBodyDescription
    */
-
   /**
    * TODO: Future project: change this to be an orchestrated communication system that will
    *  take as parameters the channels to send the communication to and support multiple
    *  orchestrated communication channels.
    */
   private async sendEmailHandler(req: Request, res: Response, next: NextFunction) {
+    if (!this.featureFlagService.isFeatureEnabled(FeatureFlag.EMAIL_SERVICE_ACTIVE)) {
+      return Util.standardErrorHandler(
+        new HttpError('this functionality is not available', 501),
+        next,
+      );
+    }
     // Validate incoming request
     if (!req.body) {
       return Util.standardErrorHandler(new HttpError('Illegal request format', 400), next);

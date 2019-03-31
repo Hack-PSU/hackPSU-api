@@ -12,7 +12,7 @@ import {
 } from 'mysql';
 import path from 'path';
 import { Readable } from 'stream';
-import { Util } from '../../../JSCommon/util';
+import { Util } from '../../../js-common/util';
 import { Logger } from '../../logging/logging';
 
 export class MockConnection implements PoolConnection {

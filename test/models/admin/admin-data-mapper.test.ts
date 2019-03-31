@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import _ from 'lodash';
 import 'mocha';
 import { anyString, anything, capture, instance, mock, reset, verify, when } from 'ts-mockito';
-import { HttpError } from '../../../src/JSCommon/errors';
+import { HttpError } from '../../../src/js-common/errors';
 import { AdminDataMapperImpl, IAdminDataMapper } from '../../../src/models/admin';
 import { EmailHistory } from '../../../src/models/admin/types/email-history';
 import { FirebaseAuthService } from '../../../src/services/auth';

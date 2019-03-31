@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as admin from 'firebase-admin';
-import { EpochNumber, UidType } from '../../../JSCommon/common-types';
+import { EpochNumber, UidType } from '../../../js-common/common-types';
 import { AclOperations, IAclPerm } from '../RBAC/rbac-types';
 
 export { RBAC } from '../RBAC/rbac';

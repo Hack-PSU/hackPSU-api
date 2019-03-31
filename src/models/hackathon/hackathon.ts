@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import jsonAssetLoader from '../../assets/schemas/json-asset-loader';
-import { EpochNumber, UidType } from '../../JSCommon/common-types';
+import { EpochNumber, UidType } from '../../js-common/common-types';
 import BaseObject from '../BaseObject';
 import { IHackathonApiModel } from './index';
 

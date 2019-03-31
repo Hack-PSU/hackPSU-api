@@ -2,17 +2,18 @@ import { Inject, Injectable } from 'injection-js';
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import squel from 'squel';
-import { UidType } from '../../../JSCommon/common-types';
-import { MethodNotImplementedError } from '../../../JSCommon/errors';
+import { UidType } from '../../../js-common/common-types';
+import { MethodNotImplementedError } from '../../../js-common/errors';
 import { AuthLevel, IFirebaseAuthService } from '../../../services/auth/auth-types';
 import { IAcl, IAclPerm } from '../../../services/auth/RBAC/rbac-types';
+import { FeatureFlagService } from '../../../services/common/feature-flags/feature-flag-service';
 import { IDbResult } from '../../../services/database';
 import { GenericDataMapper } from '../../../services/database/svc/generic-data-mapper';
 import { MysqlUow } from '../../../services/database/svc/mysql-uow.service';
 import { IUowOpts } from '../../../services/database/svc/uow.service';
 import { IActiveHackathonDataMapper } from '../../hackathon/active-hackathon';
 import { IPreRegisterDataMapper, IRegisterDataMapper } from '../../register';
-import { IRsvpDataMapper } from '../../RSVP';
+import { IRsvpDataMapper } from '../../rsvp';
 import { IScannerDataMapper } from '../../scanner';
 import { IAdminStatisticsDataMapper, IUserCount, IUserStatistics } from './index';
 
@@ -98,7 +99,7 @@ export class AdminStatisticsDataMapperImpl extends GenericDataMapper
       .right_join(this.registerDataMapper.tableName, 'reg', 'pre_reg.email = reg.email')
       .join(this.hackathonDataMapper.tableName, 'hackathon', 'reg.hackathon = hackathon.uid')
       // TODO: Change to the table name field once rsvp data mapper is created
-      .left_join('RSVP', 'rsvp', 'reg.uid = rsvp.user_id')
+      .left_join('rsvp', 'rsvp', 'reg.uid = rsvp.user_id')
       // TODO: Change to the table name field once rfid data mapper is created
       .left_join('RFID_ASSIGNMENTS', 'rfid', 'reg.uid = rfid.user_uid');
 

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { Inject } from 'injection-js';
 import { IExpressController } from '../..';
-import { HttpError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { HttpError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import { Location } from '../../../models/location/location';
 import { IFirebaseAuthService } from '../../../services/auth/auth-types';
 import { AclOperations, IAclPerm, IAdminAclPerm } from '../../../services/auth/RBAC/rbac-types';
@@ -38,14 +38,14 @@ export class AdminLocationController extends ParentRouter implements IExpressCon
       (req, res, next) => this.createLocationHandler(req, res, next),
     );
 
-    app.post(
-      '/update',
+    app.put(
+      '/',
       this.authService.verifyAcl(this.locationAcl, AclOperations.CREATE),
       (req, res, next) => this.updateLocationHandler(req, res, next),
     );
 
-    app.post(
-      '/delete',
+    app.delete(
+      '/',
       this.authService.verifyAcl(this.locationAcl, AclOperations.DELETE),
       (req, res, next) => this.deleteLocationHandler(req, res, next),
     );
@@ -116,7 +116,7 @@ export class AdminLocationController extends ParentRouter implements IExpressCon
   }
 
   /**
-   * @api {post} /admin/location/update Update name of a location
+   * @api {put} /admin/location/ Update name of a location
    * @apiVersion 2.0.0
    * @apiName Update Location
    * @apiGroup Admin Location
@@ -161,7 +161,7 @@ export class AdminLocationController extends ParentRouter implements IExpressCon
   }
 
   /**
-   * @api {post} /admin/location/delete Remove a location
+   * @api {delete} /admin/location/ Remove a location
    * @apiVersion 2.0.0
    * @apiName Remove Location
    * @apiGroup Admin Location

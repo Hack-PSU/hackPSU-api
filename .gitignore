@@ -1,18 +1,5 @@
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
 .idea/**
 **/node_modules/
-Pipfile
-hackpsu18-firebase-adminsdk-xf07l-3905b29787.json
-*.env
-config.json
-gcs_config.json
-gcs_config_staging.json
-hackpsu18-ecc9dc4878c6.json
-hackpsu-18-serviceaccount.json
 *.iml
 doc/
 .nyc_output/

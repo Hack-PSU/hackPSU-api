@@ -3,7 +3,7 @@ import { Constants } from '../../../assets/constants/constants';
 // tslint:disable:import-name
 // @ts-ignore: module name error
 import configJson from '../../../firebase_config.json';
-import { Environment, Util } from '../../../JSCommon/util';
+import { Environment, Util } from '../../../js-common/util';
 import { IFirebaseService } from './firebase-types/firebase-service';
 
 /**

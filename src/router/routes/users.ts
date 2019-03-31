@@ -3,13 +3,11 @@ import express, { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Injectable } from 'injection-js';
 import * as path from 'path';
 import { map } from 'rxjs/operators';
-import { IExpressController, ResponseBody } from '..';
+import { IExpressController } from '..';
 import { Constants } from '../../assets/constants/constants';
-import { UidType } from '../../JSCommon/common-types';
-import { HttpError } from '../../JSCommon/errors';
-import { Util } from '../../JSCommon/util';
-import { IExtraCreditDataMapper } from '../../models/extra-credit';
-import { ExtraCreditAssignment } from '../../models/extra-credit/extra-credit-assignment';
+import { UidType } from '../../js-common/common-types';
+import { HttpError } from '../../js-common/errors';
+import { Util } from '../../js-common/util';
 import { IActiveHackathonDataMapper } from '../../models/hackathon/active-hackathon';
 import { IRegisterDataMapper } from '../../models/register';
 import { PreRegistration } from '../../models/register/pre-registration';
@@ -39,7 +37,6 @@ export class UsersController extends ParentRouter implements IExpressController 
     @Inject('IRegistrationProcessor') private readonly registrationProcessor: IRegistrationProcessor,
     @Inject('IPreregistrationProcessor') private readonly preregistrationProcessor: IPreregistrationProcessor,
     @Inject('IRegisterDataMapper') private readonly registerDataMapper: IRegisterDataMapper,
-    @Inject('IExtraCreditDataMapper') private readonly extraCreditDataMapper: IExtraCreditDataMapper,
     @Inject('IActiveHackathonDataMapper') private readonly activeHackathonDataMapper: IActiveHackathonDataMapper,
     @Inject('IStorageService') private readonly storageService: IStorageService,
     @Inject('BunyanLogger') private readonly logger: Logger,
@@ -89,25 +86,6 @@ export class UsersController extends ParentRouter implements IExpressController 
       '/register',
       this.authService.verifyAcl(this.aclPerm, AclOperations.READ),
       (req, res, next) => this.getAllRegistrations(req, res, next),
-    );
-    app.get(
-      '/extra-credit',
-      this.authService.verifyAcl(this.extraCreditPerm, AclOperations.READ_ALL_CLASSES),
-      (req, res, next) => this.getExtraCreditClassesHandler(res, next),
-    );
-    app.post(
-      '/extra-credit',
-      this.authService.verifyAcl(this.extraCreditPerm, AclOperations.CREATE),
-      (req, res, next) => this.addExtraCreditAssignmentHandler(req, res, next),
-    );
-    app.get(
-      '/extra-credit/assignment',
-      (req, res, next) => this.getExtraCreditAssignmentMiddleware(req, res, next),
-    );
-    app.post(
-      '/extra-credit/delete',
-      this.authService.verifyAcl(this.extraCreditPerm, AclOperations.DELETE),
-      (req, res, next) => this.deleteExtraCreditAssignmentHandler(req, res, next),
     );
   }
 
@@ -253,34 +231,6 @@ export class UsersController extends ParentRouter implements IExpressController 
     try {
       const res = await this.registrationProcessor.processRegistration(registration);
       return this.sendResponse(response, res);
-    } catch (error) {
-      return Util.errorHandler500(error, next);
-    }
-  }
-
-  /**
-   * @api {get} /users/extra-credit Get all extra credit classes
-   * @apiVersion 2.0.0
-   * @apiName Get Extra Credit Classes
-   * @apiGroup User
-   * @apiPermission UserPermission
-   *
-   * @apiUse AuthArgumentRequired
-   *
-   * @apiSuccess {ExtraCreditClasses[]} Array of extra credit classes
-   * @apiUse ResponseBodyDescription
-   * @apiUse RequestOpts
-   */
-  private async getExtraCreditClassesHandler(res: Response, next: NextFunction) {
-    try {
-      const result = await this.extraCreditDataMapper.getAllClasses({
-        byHackathon: !res.locals.allHackathons,
-        count: res.locals.limit,
-        hackathon: res.locals.hackathon,
-        startAt: res.locals.offset,
-      });
-      const response = new ResponseBody('Success', 200, result);
-      return this.sendResponse(res, response);
     } catch (error) {
       return Util.errorHandler500(error, next);
     }

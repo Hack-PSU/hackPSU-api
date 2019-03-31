@@ -1,4 +1,4 @@
-import { EpochNumber, UidType } from '../../../JSCommon/common-types';
+import { EpochNumber, UidType } from '../../../js-common/common-types';
 import { IDbResult } from '../../../services/database';
 import { IUowOpts } from '../../../services/database/svc/uow.service';
 import {
@@ -51,7 +51,7 @@ export interface IUserStatistics {
   end_time: EpochNumber;
   base_pin: number;
   active: boolean;
-  // RSVP data
+  // rsvp data
   user_id: UidType;
   rsvp_time: EpochNumber;
   rsvp_status: boolean;

@@ -1,5 +1,5 @@
 import jsonAssetLoader from '../../assets/schemas/json-asset-loader';
-import { UidType } from '../../JSCommon/common-types';
+import { UidType } from '../../js-common/common-types';
 import BaseObject from '../BaseObject';
 
 const registeredUserSchema = jsonAssetLoader('registeredUserSchema');

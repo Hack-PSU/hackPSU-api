@@ -1,0 +1,5 @@
+{
+  "notification_for_update": true,
+  "confirmation_email": true,
+  "email_service_active": true
+}

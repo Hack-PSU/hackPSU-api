@@ -1,17 +1,16 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Util } from '../../JSCommon/util';
+import { Util } from '../../js-common/util';
 
 export class Constants {
+  // Connection configuration for SQL db
   public static readonly sqlConnection = {
     acquireTimeout: 10 * 1000,
     connectTimeout: 10 * 1000,
     connectionLimit: 56,
-    database: Util.readEnv('SQL_DATABASE', 'my_db') || Util.readEnv('RDS_DATABASE', 'my_db'),
-    // Required for AWS
-    host: Util.readEnv('SQL_HOSTNAME', 'localhost') || Util.readEnv('RDS_HOSTNAME', 'localhost'),
+    database: Util.readEnv('SQL_DATABASE', 'my_db'),
+    host: Util.readEnv('SQL_HOSTNAME', 'localhost'),
     multipleStatements: true,
-    // Required for GCP
     password: Util.readEnv('SQL_PASSWORD', '') || Util.readEnv('RDS_PASSWORD', ''),
     port: parseInt(Util.readEnv('SQL_PORT', '3306'), 10),
     socketPath: `/cloudsql/${Util.readEnv('INSTANCE_CONNECTION_NAME', '')}`,
@@ -34,14 +33,14 @@ export class Constants {
       }
       return (useDefaultTypeCasting());
     },
-    user: Util.readEnv('SQL_USER', 'user') || Util.readEnv('RDS_USERNAME', 'user'),
+    user: Util.readEnv('SQL_USER', 'user'),
   };
 
   public static readonly firebaseDB = {
-    debug: 'https://hackpsu18-staging.firebaseio.com/',
-    prod: 'https://hackpsu18.firebaseio.com/',
-    staging: 'https://hackpsu18-staging.firebaseio.com',
-    test: 'https://hackpsu18-staging.firebaseio.com/',
+    debug: '*fill-url-here*',
+    prod: '*fill-url-here*',
+    staging: '*fill-url-here*',
+    test: '*fill-url-here*',
   };
 
   public static readonly pushNotifKey = {
@@ -50,9 +49,9 @@ export class Constants {
   };
 
   public static readonly RSVPEmailHtml = {
-    fromEmail: 'team@hackpsu.org',
-    subject: 'HackPSU RSVP Confirmation',
-    text: fs.readFileSync(path.join(__dirname, 'RSVP_Email.html'), 'utf-8'),
+    fromEmail: '*fill-email-here*',
+    subject: 'rsvp confirmation',
+    text: fs.readFileSync(path.join(__dirname, '*fill-path-here*'), 'utf-8'),
   };
 
   public static readonly GCS = {
@@ -63,6 +62,4 @@ export class Constants {
   };
   public static readonly SendGridApiKey = Util.readEnv('SENDGRID_ACCESS_KEY', '');
   public static readonly MailchimpApiKey = Util.readEnv('MAILCHIMP_API_KEY', '');
-  public static readonly MailchimpPreregEmailList = 'HackPSU Email List';
-  public static readonly redisKey = Util.readEnv('REDIS_KEY', '');
 }

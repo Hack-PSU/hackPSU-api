@@ -1,5 +1,5 @@
 import * as squel from 'squel';
-import { UidType } from '../../JSCommon/common-types';
+import { UidType } from '../../js-common/common-types';
 import { IDataMapper, IDataMapperHackathonSpecific, IDbResult } from '../../services/database';
 import { IUowOpts } from '../../services/database/svc/uow.service';
 import { Hackathon } from '../hackathon';

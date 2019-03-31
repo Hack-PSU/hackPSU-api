@@ -2,7 +2,7 @@ import { Inject, Injectable } from 'injection-js';
 import { MysqlError, PoolConnection } from 'mysql';
 import { defer, from, Observable } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
-import { HttpError } from '../../../JSCommon/errors';
+import { HttpError } from '../../../js-common/errors';
 import { Logger } from '../../logging/logging';
 import { ICacheService } from '../cache/cache';
 import { IConnectionFactory } from '../connection/connection-factory';

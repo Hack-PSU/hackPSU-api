@@ -2,11 +2,13 @@ import * as fs from 'fs';
 import { Inject, Injectable } from 'injection-js';
 import * as path from 'path';
 import request from 'request';
-import { UidType } from '../JSCommon/common-types';
+import { UidType } from '../js-common/common-types';
 import { Hackathon } from '../models/hackathon';
 import { IRegisterDataMapper } from '../models/register';
 import { Registration } from '../models/register/registration';
 import { ResponseBody } from '../router/router-types';
+import { FeatureFlagService } from '../services/common/feature-flags/feature-flag-service';
+import { FeatureFlag } from '../services/common/feature-flags/feature-flags-types';
 import { IEmailService } from '../services/communication/email';
 import { IDataMapper, IDbResult } from '../services/database';
 import { IUowOpts } from '../services/database/svc/uow.service';
@@ -38,12 +40,15 @@ export class RegistrationProcessor implements IRegistrationProcessor {
     @Inject('IRegisterDataMapper') private readonly registerDataMapper: IRegisterDataMapper,
     @Inject('IHackathonDataMapper') private readonly hackathonDataMapper: IDataMapper<Hackathon>,
     @Inject('IEmailService') private readonly emailService: IEmailService,
+    @Inject('FeatureFlagService') private readonly featureFlagService: FeatureFlagService,
   ) {}
 
   public async processRegistration(registration: Registration) {
     const result = await this.registerDataMapper.insert(registration);
     const submission = await this.registerDataMapper.submit(registration);
-    await this.sendRegistrationEmail(registration);
+    if (this.featureFlagService.isFeatureEnabled(FeatureFlag.CONFIRMATION_EMAIL)) {
+      await this.sendRegistrationEmail(registration);
+    }
     return new ResponseBody(
       'Success',
       200,

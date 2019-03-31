@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import jsonAssetLoader from '../../assets/schemas/json-asset-loader';
-import { EpochNumber } from '../../JSCommon/common-types';
+import { EpochNumber } from '../../js-common/common-types';
 import BaseObject from '../BaseObject';
 
 const liveUpdateSchema = jsonAssetLoader('liveUpdateSchema');

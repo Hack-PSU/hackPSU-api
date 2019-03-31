@@ -2,7 +2,7 @@ import { Inject, Injectable } from 'injection-js';
 import { from, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import * as squel from 'squel';
-import { UidType } from '../../../JSCommon/common-types';
+import { UidType } from '../../../js-common/common-types';
 import { AuthLevel } from '../../../services/auth/auth-types';
 import { IAcl, IAclPerm } from '../../../services/auth/RBAC/rbac-types';
 import { IDbResult } from '../../../services/database';

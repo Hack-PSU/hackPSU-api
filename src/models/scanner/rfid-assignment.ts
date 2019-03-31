@@ -1,5 +1,5 @@
 import jsonAssetLoader from '../../assets/schemas/json-asset-loader';
-import { EpochNumber, UidType } from '../../JSCommon/common-types';
+import { EpochNumber, UidType } from '../../js-common/common-types';
 import BaseObject from '../BaseObject';
 
 const rfidAssignmentSchema = jsonAssetLoader('rfidAssignmentSchema');

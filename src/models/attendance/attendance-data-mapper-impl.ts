@@ -4,7 +4,7 @@ import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as squel from 'squel';
 import { IStatUowOpts } from '.';
-import { MethodNotImplementedError } from '../../JSCommon/errors';
+import { MethodNotImplementedError } from '../../js-common/errors';
 import { AuthLevel } from '../../services/auth/auth-types';
 import { IAcl, IAclPerm } from '../../services/auth/RBAC/rbac-types';
 import { IDataMapper, IDbResult } from '../../services/database';

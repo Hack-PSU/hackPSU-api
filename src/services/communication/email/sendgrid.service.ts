@@ -2,7 +2,7 @@ import mail from '@sendgrid/mail';
 import * as validator from 'email-validator';
 import { Injectable } from 'injection-js';
 import { Constants } from '../../../assets/constants/constants';
-import { EmailReplacementError } from '../../../JSCommon/errors';
+import { EmailReplacementError } from '../../../js-common/errors';
 import { IEmailData } from './email-types';
 import { IEmailService } from './email.service';
 

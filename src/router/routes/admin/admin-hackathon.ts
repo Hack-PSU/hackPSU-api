@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Injectable } from 'injection-js';
 import { IExpressController, ResponseBody } from '../..';
-import { HttpError } from '../../../JSCommon/errors';
-import { Util } from '../../../JSCommon/util';
+import { HttpError } from '../../../js-common/errors';
+import { Util } from '../../../js-common/util';
 import { Hackathon } from '../../../models/hackathon';
 import { IActiveHackathonDataMapper } from '../../../models/hackathon/active-hackathon';
 import { IFirebaseAuthService } from '../../../services/auth/auth-types';
@@ -42,13 +42,13 @@ export class AdminHackathonController extends ParentRouter implements IExpressCo
       this.authService.verifyAcl(this.acl, AclOperations.CREATE),
       (req, res, next) => this.createHackathonHandler(req, res, next),
     );
-    app.post(
+    app.put(
       '/active',
       this.authService.verifyAcl(this.adminAcl, AclOperations.MAKE_ACTIVE),
       (req, res, next) => this.makeHackathonActiveHandler(req, res, next),
     );
-    app.post(
-      '/update',
+    app.put(
+      '/',
       this.authService.verifyAcl(this.acl, AclOperations.UPDATE),
       (req, res, next) => this.updateHackathonHandler(req, res, next),
     );
@@ -119,7 +119,7 @@ export class AdminHackathonController extends ParentRouter implements IExpressCo
   }
 
   /**
-   * @api {post} /admin/hackathon/active Mark a hackathon as active
+   * @api {put} /admin/hackathon/active Mark a hackathon as active
    * @apiVersion 2.0.0
    * @apiDescription Ends the currently active hackathon and marks the provided hackathon as active
    * @apiName Add Active hackathon
@@ -161,7 +161,7 @@ export class AdminHackathonController extends ParentRouter implements IExpressCo
   }
 
   /**
-   * @api {post} /admin/hackathon/update Update non-active hackathon
+   * @api {put} /admin/hackathon/ Update non-active hackathon
    * @apiVersion 2.0.0
    * @apiName Update hackathon
    * @apiGroup Hackathon

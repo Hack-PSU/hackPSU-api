@@ -1,5 +1,5 @@
 import * as squel from 'squel';
-import { UidType } from '../../../JSCommon/common-types';
+import { UidType } from '../../../js-common/common-types';
 
 /**
  * A wrapper around connecting to a database backend. Performs "one unit of work" with each call.

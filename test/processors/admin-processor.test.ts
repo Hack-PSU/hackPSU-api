@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import _ from 'lodash';
 import 'mocha';
 import { anything, instance, mock, reset, verify, when } from 'ts-mockito';
-import { HttpError } from '../../src/JSCommon/errors';
+import { HttpError } from '../../src/js-common/errors';
 import { AdminDataMapperImpl } from '../../src/models/admin';
 import { EmailHistory } from '../../src/models/admin/types/email-history';
 import { AdminProcessor } from '../../src/processors/admin-processor';

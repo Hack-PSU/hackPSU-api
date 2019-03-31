@@ -2,7 +2,7 @@ import { Inject, Injectable } from 'injection-js';
 import moment from 'moment';
 import randomNumberCsprng from 'random-number-csprng';
 import { default as uuid } from 'uuid/v4';
-import { HttpError } from '../../JSCommon/errors';
+import { HttpError } from '../../js-common/errors';
 import { IFirebaseService } from '../common/firebase/firebase-types/firebase-service';
 import { RateLimiter } from '../common/rate-limiter/rate-limiter';
 import { RateLimiterService } from '../common/rate-limiter/rate-limiter.service';

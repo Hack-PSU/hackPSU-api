@@ -1,4 +1,4 @@
-import { EpochNumber, UidType } from '../../../JSCommon/common-types';
+import { EpochNumber, UidType } from '../../../js-common/common-types';
 import BaseObject from '../../BaseObject';
 
 export class EmailHistory extends BaseObject {
