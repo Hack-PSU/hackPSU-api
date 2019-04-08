@@ -1,11 +1,12 @@
 import { Inject, Injectable } from 'injection-js';
-import { MysqlError, PoolConnection } from 'mysql';
+import { PoolConnection, QueryError, RowDataPacket } from 'mysql2/promise';
 import { defer, from, Observable } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { HttpError } from '../../../JSCommon/errors';
 import { Logger } from '../../logging/logging';
 import { ICacheService } from '../cache/cache';
 import { IConnectionFactory } from '../connection/connection-factory';
+import { IDbReadable } from '../index';
 import { IQueryOpts, IUow } from './uow.service';
 
 export enum SQL_ERRORS {
@@ -45,98 +46,94 @@ export class MysqlUow implements IUow {
    * @param query The query string to query with.
    * This function performs SQL escaping, so any substitutable parameters should be '?'s
    * @param params Parameters to substitute in the query
-   * @param opts
+   * @param dbReader Reader that converts database JSON to node objects
    * @return {Promise<any>}
    */
   public query<T>(
     query: string,
     params: Array<string | boolean | number> = [],
+    dbReader?: IDbReadable<T>,
     opts: IQueryOpts = { cache: false },
   ) {
     return this.connectionPromise
       .pipe(
-        mergeMap((connection: PoolConnection) => {
-          return new Promise<T[]>(async (resolve, reject) => {
-            if (opts.cache) { // Check cache
-              try {
-                const result: T[] = await this.cacheService.get(`${query}${(params as string[]).join('')}`);
-                if (result !== null) {
-                  this.release(connection);
-                  this.logger.info('served request from memory cache');
-                  return resolve(result);
-                }
-              } catch (err) {
-                // Error checking cache. Fallback silently.
-                this.logger.error(err);
-              }
-            }
-            connection.beginTransaction(() => {
-              connection.query(query, params, async (err: MysqlError, result: T[]) => {
-                if (err) {
-                  connection.rollback();
-                  this.release(connection);
-                  return reject(err);
-                }
-                if (result.length === 0) {
-                  this.complete(connection);
-                  return reject({
-                    sql: connection.format(query, params),
-                    code: 'no data found',
-                    errno: 404,
-                  });
-                }
-                // Add result to cache
-                try {
-                  await this.cacheService.set(`${query}${(params as string[]).join('')}`, result)
-                } catch (error) {
-                  this.logger.error(error);
-                }
-                this.complete(connection);
-                return resolve(result);
-              });
-            });
-          });
+        switchMap(async (connection: PoolConnection) => {
+          return this.queryOnConnection(opts, query, params, connection);
         }),
-        catchError((err: MysqlError) => {
+        catchError((err: QueryError) => {
           this.sqlErrorHandler(err);
-          return from('');
+          return from([]);
         }),
+        map((results: any[]) => dbReader ? results.map(result => dbReader.generateFromDbRepresentation(result)) : results),
       )
       .toPromise()
       // Gracefully convert MySQL errors to HTTP Errors
-      .catch((err: MysqlError) => this.sqlErrorHandler(err));
+      .catch((err: QueryError) => this.sqlErrorHandler(err));
   }
 
   public commit(connection: PoolConnection) {
-    return new Promise<any>((resolve) => {
-      connection.commit(() => {
-        return resolve(null);
-      });
-    });
+    return connection.commit();
   }
 
-  public complete(connection: PoolConnection) {
-    return new Promise<any>((resolve) => {
-      connection.commit(() => {
-        this.release(connection);
-        return resolve(null);
-      });
-    });
+  public async complete(connection: PoolConnection) {
+    await connection.commit();
+    return this.release(connection);
   }
 
   public release(connection: PoolConnection) {
-    connection.release();
+    return connection.release();
+  }
+
+  private async queryOnConnection<T>(
+    opts: IQueryOpts,
+    query: string,
+    params: Array<string | boolean | number>,
+    connection: PoolConnection,
+  ) {
+    if (opts.cache) { // Check cache
+      try {
+        const result: T[] = await this.cacheService.get(`${query}${(params as string[]).join('')}`);
+        if (result !== null) {
+          this.release(connection);
+          this.logger.info('served request from memory cache');
+          return result;
+        }
+      } catch (err) {
+        // Error checking cache. Fallback silently.
+        this.logger.error(err);
+      }
+    }
+    await connection.beginTransaction();
+    try {
+      const [result] = await connection.query(query, params);
+      if ((result as RowDataPacket).length === 0) {
+        await connection.rollback();
+        this.release(connection);
+        this.sqlErrorHandler({
+          code: 'ER_EMPTY_QUERY',
+          errno: 404,
+          fatal: false,
+          name: 'QueryError',
+          message: 'no data found',
+        });
+      }
+      // Add result to cache
+      this.cacheService.set(`${query}${(params as string[]).join('')}`, result)
+        .catch(cacheError => this.logger.error(cacheError));
+      await this.complete(connection);
+      return result;
+    } catch (error) {
+      await connection.rollback();
+      this.release(connection);
+      this.sqlErrorHandler(error);
+    }
   }
 
   /**
    * Converts MySQL errors to HTTP Errors
    * @param {MysqlError} error
    */
-  private sqlErrorHandler(error: MysqlError) {
-    if (error instanceof HttpError) {
-      // Error was already handled
-      throw error;
-    }
+  private sqlErrorHandler(error: QueryError) {
     this.logger.error(error);
     switch (error.errno) {
       case SQL_ERRORS.PARSE_ERROR:

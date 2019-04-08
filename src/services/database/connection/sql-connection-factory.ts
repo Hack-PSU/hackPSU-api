@@ -1,5 +1,5 @@
 import { Injectable } from 'injection-js';
-import { createPool, Pool, PoolConnection } from 'mysql';
+import { createPool, Pool, PoolConnection } from 'mysql2/promise';
 import { Constants } from '../../../assets/constants/constants';
 import { Util } from '../../../JSCommon/util';
 import { IConnectionFactory } from './connection-factory';
@@ -18,11 +18,6 @@ export class SqlConnectionFactory implements IConnectionFactory {
   }
 
   public getConnection(): Promise<PoolConnection> {
-    return new Promise<PoolConnection>(((resolve, reject) => {
-      this.dbConnection.getConnection((err, connection) => {
-        if (err) return reject(err);
-        return resolve(connection);
-      });
-    }));
+    return this.dbConnection.getConnection();
   }
 }
