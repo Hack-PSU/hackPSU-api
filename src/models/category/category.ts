@@ -11,6 +11,7 @@ export class Category extends BaseObject {
   public uid: number;
   private categoryName: string;
   private isSponsor: boolean;
+  private priority: number;
 
   public get schema() {
     return categorySchema;
@@ -33,6 +34,15 @@ export class Category extends BaseObject {
     return this;
   }
 
+  public setPriority(priority: number) {
+    this.priority = priority;
+    return this;
+  }
+
+  public getPriority() {
+    return this.priority;
+  }
+
   public setIsSponsor(isSponsor: boolean) {
     this.isSponsor = isSponsor;
     return this;
@@ -50,4 +60,3 @@ export class Category extends BaseObject {
     return this.isSponsor;
   }
 }
-

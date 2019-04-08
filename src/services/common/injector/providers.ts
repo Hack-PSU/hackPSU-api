@@ -66,8 +66,8 @@ export class ExpressProvider {
         { provide: 'AdminRegisterController', useClass: AdminRegisterController },
         { provide: 'AdminStatisticsController', useClass: AdminStatisticsController },
         { provide: 'AdminHackathonController', useClass: AdminHackathonController },
-          { provide: 'AdminLocationController', useClass: AdminLocationController },
-          { provide: 'AdminCheckoutController', useClass: AdminCheckoutController },
+        { provide: 'AdminLocationController', useClass: AdminLocationController },
+        { provide: 'AdminCheckoutController', useClass: AdminCheckoutController },
 
           // Processors
           { provide: 'IIndexProcessor', useClass: IndexProcessor },

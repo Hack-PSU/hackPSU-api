@@ -4,6 +4,7 @@ import { ObjectFactory } from '../object-factory';
 import { Category } from './category';
 
 export interface ICategoryApiModel extends IApiModel<Category> {
+  priority?: number;
   uid?: number;
   categoryName?: string;
   isSponsor?: boolean;
@@ -24,6 +25,7 @@ export class CategoryFactory extends ObjectFactory<Category> {
     }
     return new Category()
       .setUid(data.uid)
+      .setPriority(data.priority || 1)
       .setCategoryName(data.categoryName || '')
       .setIsSponsor(data.isSponsor || false);
   }

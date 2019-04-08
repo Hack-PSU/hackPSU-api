@@ -1,25 +1,27 @@
 import jsonAssetLoader from '../../assets/schemas/json-asset-loader';
-import { UidType } from '../../JSCommon/common-types';
+import { Omit, UidType } from '../../JSCommon/common-types';
+import { IApiModel } from '../../services/database';
 import BaseObject from '../BaseObject';
+import { Category } from '../category/category';
+import { Registration } from '../register/registration';
 
 const projectSchema = jsonAssetLoader('projectRegistrationSchema');
 
-export interface IProjectApiModel {
-  project_name: string;
+export interface IProjectApiModel extends IApiModel<Project> {
+  projectName: string;
   team: string[];
-  categories: string[];
-  projectId: UidType;
+  categories: number[];
+  projectId?: UidType;
+}
 
+export interface IProjectApiResponseModel extends Omit<IProjectApiModel, 'team' | 'categories'> {
+  team: Registration[];
+  categories: Category[];
 }
 
 export class Project extends BaseObject {
 
-  public readonly project_name: string;
-  public readonly team: string[];
-  public readonly categories: string[];
-  public projectId: UidType;
-
-  public get id() {
+  public get uid() {
     return this.projectId;
   }
 
@@ -27,12 +29,43 @@ export class Project extends BaseObject {
     return projectSchema;
   }
 
-  constructor(data: IProjectApiModel) {
+  private project_name: string;
+  private team: string[];
+  private categories: number[];
+  private projectId?: UidType;
+  private tableNumber?: number;
+
+  constructor() {
     super();
-    this.project_name = data.projectId;
-    this.team = data.team;
-    this.categories = data.categories;
-    this.projectId = data.projectId;
   }
 
+  public setProjectName(projectName: string) {
+    this.project_name = projectName;
+    return this;
+  }
+
+  public setTeam(team: string[]) {
+    this.team = team;
+    return this;
+  }
+
+  public setCategories(categories: number[]) {
+    this.categories = categories;
+    return this;
+  }
+
+  public setUid(uid: string) {
+    this.projectId = uid;
+    return this;
+  }
+
+  public getProjectName() { return this.project_name; }
+
+  public getTeam() { return this.team; }
+
+  public getTableNumber() { return this.tableNumber; }
+
+  public getCategories() { return this.categories; }
+
+  public getUid() { return this.projectId!; }
 }

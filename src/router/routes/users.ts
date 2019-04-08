@@ -14,9 +14,8 @@ import { PreRegistration } from '../../models/register/pre-registration';
 import { Registration } from '../../models/register/registration';
 import { IPreregistrationProcessor } from '../../processors/pre-registration-processor';
 import { IRegistrationProcessor } from '../../processors/registration-processor';
-import { IFirebaseAuthService } from '../../services/auth/auth-types';
+import { AuthLevel, IFirebaseAuthService } from '../../services/auth/auth-types';
 import { AclOperations, IAclPerm } from '../../services/auth/RBAC/rbac-types';
-import { AuthLevel } from '../../services/auth/auth-types';
 import { Logger } from '../../services/logging/logging';
 import { IStorageService } from '../../services/storage';
 import { ParentRouter } from '../router-types';
@@ -79,8 +78,8 @@ export class UsersController extends ParentRouter implements IExpressController 
       '/extra-credit/delete',
       this.authService.verifyAcl(this.extraCreditPerm, AclOperations.DELETE),
       (req, res, next) => this.deleteExtraCreditAssignmentHandler(req, res, next),
-    )
-    
+    );
+
   }
 
   private async generateFileName(uid: UidType, firstName: string, lastName: string) {
@@ -341,8 +340,8 @@ export class UsersController extends ParentRouter implements IExpressController 
           return Util.standardErrorHandler(new HttpError('Insufficient permissions for this operation', 401), next);
         }
         return this.getExtraCreditAssignmentHandler(req, res, next);
+    }
   }
-}
 
   /**
    * @api {get} /users/extra-credit/assignment Get an extra credit assignment
@@ -354,7 +353,7 @@ export class UsersController extends ParentRouter implements IExpressController 
    * @apiParam {String} uid - the id associated with the assignment
    * @apiUse AuthArgumentRequired
    *
-   * @apiSuccess {ExtraCreditAssignment} The retrieved extra credit assignment 
+   * @apiSuccess {ExtraCreditAssignment} The retrieved extra credit assignment
    * @apiUse ResponseBodyDescription
    * @apiUse RequestOpts
    */
@@ -414,7 +413,7 @@ export class UsersController extends ParentRouter implements IExpressController 
     } catch (error) {
       return Util.errorHandler500(error, next);
     }
-  }  
+  }
 
   /**
    * @api {get} /users/extra-credit/assignment?type=class Get all extra credit assignments for a class
@@ -450,21 +449,21 @@ export class UsersController extends ParentRouter implements IExpressController 
     } catch (error) {
       return Util.errorHandler500(error, next);
     }
-  }  
-  
+  }
+
  /**
-   * @api {post} /users/extra-credit/delete Remove an extra credit assignment
-   * @apiVersion 2.0.0
-   * @apiName Remove Extra Credit Assignment
-   * @apiGroup User
-   * @apiPermission DirectorPermission
-   *
-   * @apiParam {String} uid - the id associated with the hacker
-   * @apiParam {String} hackathonUid - the id associated with the current hackathon
-   * @apiUse AuthArgumentRequired
-   * @apiUse IllegalArgumentError
-   * @apiUse ResponseBodyDescription
-   */
+  * @api {post} /users/extra-credit/delete Remove an extra credit assignment
+  * @apiVersion 2.0.0
+  * @apiName Remove Extra Credit Assignment
+  * @apiGroup User
+  * @apiPermission DirectorPermission
+  *
+  * @apiParam {String} uid - the id associated with the hacker
+  * @apiParam {String} hackathonUid - the id associated with the current hackathon
+  * @apiUse AuthArgumentRequired
+  * @apiUse IllegalArgumentError
+  * @apiUse ResponseBodyDescription
+  */
   private async deleteExtraCreditAssignmentHandler(
     req: Request,
     res: Response,
@@ -477,7 +476,7 @@ export class UsersController extends ParentRouter implements IExpressController 
       return Util.standardErrorHandler(new HttpError('Could not find valid assignment uid', 400), next);
     }
     try {
-      const ecAssignment = new ExtraCreditAssignment({ uid: req.body.uid, cid: 1 })
+      const ecAssignment = new ExtraCreditAssignment({ uid: req.body.uid, cid: 1 });
       const result = await this.extraCreditDataMapper.delete(ecAssignment);
       const response = new ResponseBody(
         'Success',
