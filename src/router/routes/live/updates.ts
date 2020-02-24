@@ -68,7 +68,7 @@ export class UpdatesController extends LiveController {
    * @apiParam {String} uid The id of the update to be deleted
    * @apiParam {String} [hackathon=current] The hackathon the update was made for
    * @apiUse IllegalArgumentError
-   * @apiUse ResponseBodyRescription
+   * @apiUse ResponseBodyDescription
    */
   private async deleteUpdateHandler(
     request: express.Request,
