@@ -66,6 +66,7 @@ export class TestData {
       veteran: VeteranOptions.NO,
       time: 0,
       submitted: false,
+      interests: 'test interests',
     };
   }
 

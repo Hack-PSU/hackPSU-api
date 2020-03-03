@@ -54,6 +54,7 @@ const validRegistration = new Registration({
   veteran: VeteranOptions.NODISCLOSE,
   time: Date.now(),
   submitted: true,
+  interests: 'test interests',
 });
 
 describe('TEST: Register data mapper', () => {
@@ -351,8 +352,8 @@ describe('TEST: Register data mapper', () => {
         '`shirt_size`, `travel_reimbursement`, `first_hackathon`, `university`, `email`, ' +
         '`academic_year`, `major`, `phone`, `race`, `coding_experience`, `uid`, ' +
         '`eighteenBeforeEvent`, `mlh_coc`, `mlh_dcp`, `referral`, `project`, `expectations`, ' +
-        '`veteran`, `time`, `submitted`, `hackathon`) ' +
-        'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
+        '`veteran`, `time`, `submitted`, `interests`, `hackathon`) ' +
+        'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
       const expectedParams = [
         validRegistration.firstname,
         validRegistration.lastname,
@@ -376,7 +377,8 @@ describe('TEST: Register data mapper', () => {
         validRegistration.expectations,
         validRegistration.veteran,
         validRegistration.time,
-        true,
+        validRegistration.submitted,
+        validRegistration.interests,
         'test uid',
       ];
       const [generatedSQL, generatedParams] = capture<string, string[]>(mysqlUowMock.query)
@@ -416,6 +418,7 @@ describe('TEST: Register data mapper', () => {
         veteran: VeteranOptions.NODISCLOSE,
         time: Date.now(),
         submitted: true,
+        interests: 'test interests',
       });
       // WHEN: Adding an invalid registration
       try {
@@ -493,7 +496,7 @@ describe('TEST: Register data mapper', () => {
         '`shirt_size` = ?, `travel_reimbursement` = ?, `first_hackathon` = ?, `university` = ?, ' +
         '`email` = ?, `academic_year` = ?, `major` = ?, `phone` = ?, `race` = ?, `coding_experience` = ?, ' +
         '`uid` = ?, `eighteenBeforeEvent` = ?, `mlh_coc` = ?, `mlh_dcp` = ?, `referral` = ?, `project` = ?, ' +
-        '`expectations` = ?, `veteran` = ?, `time` = ?, `submitted` = ?, `hackathon` = ? ' +
+        '`expectations` = ?, `veteran` = ?, `time` = ?, `submitted` = ?, `interests` = ?, `hackathon` = ? ' +
         'WHERE (uid = ?) AND (hackathon = ?);';
       const expectedParams = [
         validRegistration.firstname,
@@ -518,7 +521,8 @@ describe('TEST: Register data mapper', () => {
         validRegistration.expectations,
         validRegistration.veteran,
         validRegistration.time,
-        true,
+        validRegistration.submitted,
+        validRegistration.interests,
         validRegistration.hackathon,
         validRegistration.id,
         validRegistration.hackathon,
@@ -560,6 +564,7 @@ describe('TEST: Register data mapper', () => {
         veteran: VeteranOptions.NODISCLOSE,
         time: Date.now(),
         submitted: false,
+        interests: 'test interests',
       });
       // WHEN: Updating an invalid registration
       try {

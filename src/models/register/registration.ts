@@ -70,6 +70,7 @@ export interface IRegistrationApiModel {
   expectations: string | null;
   veteran: VeteranOptions;
   submitted: boolean;
+  interests: string | null;
 }
 
 export class Registration extends BaseObject {
@@ -106,6 +107,7 @@ export class Registration extends BaseObject {
   public hackathon: string;
   public submitted: boolean;
   public pin: number;
+  public interests: string | null;
 
   constructor(data: IRegistrationApiModel) {
     super();
@@ -135,6 +137,7 @@ export class Registration extends BaseObject {
     this.veteran = data.veteran;
     this.time = data.time;
     this.submitted = data.submitted;
+    this.interests = data.interests || null;
     // this.hackathon = data.hackathon;
   }
 
