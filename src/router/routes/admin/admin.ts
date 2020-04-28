@@ -70,6 +70,7 @@ export class AdminController extends ParentRouter implements IExpressController 
     AdminController.registerRouter('data', 'AdminStatisticsController', 2);
     AdminController.registerRouter('hackathon', 'AdminHackathonController', 2);
     AdminController.registerRouter('location', 'AdminLocationController', 2);
+    AdminController.registerRouter('category', 'AdminCategoryController', 2);
     app.get('/', (req, res) => this.mainHandler(res));
     app.get(
       '/userid',

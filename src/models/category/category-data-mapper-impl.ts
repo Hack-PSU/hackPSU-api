@@ -6,12 +6,13 @@ import { UidType } from '../../JSCommon/common-types';
 import { HttpError } from '../../JSCommon/errors';
 import { AuthLevel } from '../../services/auth/auth-types';
 import { IAcl, IAclPerm } from '../../services/auth/RBAC/rbac-types';
-import { IDataMapper, IDbResult } from '../../services/database';
+import { IDataMapper, IDbReadable, IDbResult, IDbWritable } from '../../services/database';
 import { GenericDataMapper } from '../../services/database/svc/generic-data-mapper';
 import { MysqlUow } from '../../services/database/svc/mysql-uow.service';
 import { IUowOpts } from '../../services/database/svc/uow.service';
 import { Logger } from '../../services/logging/logging';
 import { Category } from './category';
+import { CategoryFactory } from './category-factory';
 
 @Injectable()
 export class CategoryDataMapperImpl extends GenericDataMapper
@@ -24,6 +25,9 @@ export class CategoryDataMapperImpl extends GenericDataMapper
   public readonly UPDATE: string = 'category:update';
 
   public tableName = 'CATEGORY_LIST';
+
+  public dbReader: IDbReadable<Category>;
+  public dbWriter: IDbWritable<Category>;
 
   protected pkColumnName: string = 'uid';
 
@@ -39,6 +43,8 @@ export class CategoryDataMapperImpl extends GenericDataMapper
         AuthLevel.TEAM_MEMBER,
       ],
     );
+    this.dbReader = new CategoryFactory();
+    this.dbWriter = new CategoryFactory();
   }
   public delete(id: UidType): Promise<IDbResult<void>> {
     const query = squel.delete({ autoQuoteTableNames: true, autoQuoteFieldNames: true })
@@ -47,7 +53,7 @@ export class CategoryDataMapperImpl extends GenericDataMapper
       .toParam();
     query.text = query.text.concat(';');
     return from(
-      this.sql.query(query.text, query.values, { cache: false }),
+      this.sql.query(query.text, query.values, this.dbReader, { cache: false }),
     ).pipe(
       map(() => ({ result: 'Success', data: undefined })),
     ).toPromise();
@@ -68,18 +74,13 @@ export class CategoryDataMapperImpl extends GenericDataMapper
       .toParam();
     query.text = query.text
       .concat(';');
-    return from(this.sql.query<Category>(query.text, query.values, { cache: true }))
+    return from(this.sql.query<Category>(query.text, query.values, this.dbReader, { cache: true }))
       .pipe(
         map((category: Category[]) => ({ result: 'Success', data: category[0] })),
       )
       .toPromise();
   }
 
-  /**
-   *
-   * @param opts?
-   * @return {Promise<Stream>}
-   */
   public async getAll(opts?: IUowOpts): Promise<IDbResult<Category[]>> {
     let queryBuilder = squel.select({
       autoQuoteFieldNames: true,
@@ -97,7 +98,7 @@ export class CategoryDataMapperImpl extends GenericDataMapper
     }
     const query = queryBuilder.toParam();
     query.text = query.text.concat(';');
-    return from(this.sql.query<Category>(query.text, query.values, { cache: true }))
+    return from(this.sql.query<Category>(query.text, query.values, this.dbReader, { cache: true }))
         .pipe(
           map((categories: Category[]) => ({ result: 'Success', data: categories })),
         )
@@ -117,7 +118,7 @@ export class CategoryDataMapperImpl extends GenericDataMapper
       .toParam();
     query.text = query.text.concat(';');
     return from(
-      this.sql.query<number>(query.text, query.values, { cache: true }),
+      this.sql.query<number>(query.text, query.values, undefined, { cache: true }),
     ).pipe(
       map((result: number[]) => ({ result: 'Success', data: result[0] })),
     ).toPromise();
@@ -132,13 +133,13 @@ export class CategoryDataMapperImpl extends GenericDataMapper
     }
     const query = squel.insert({ autoQuoteFieldNames: true, autoQuoteTableNames: true })
       .into(this.tableName)
-      .setFieldsRows([object.dbRepresentation])
+      .setFieldsRows([this.dbWriter.generateDbRepresentation(object)])
       .toParam();
     query.text = query.text.concat(';');
     return from(
-      this.sql.query<void>(query.text, query.values, { cache: false }),
+      this.sql.query<void>(query.text, query.values, this.dbReader, { cache: false }),
     ).pipe(
-      map(() => ({ result: 'Success', data: object.cleanRepresentation })),
+      map(() => ({ result: 'Success', data: object })),
     ).toPromise();
   }
 
@@ -151,15 +152,14 @@ export class CategoryDataMapperImpl extends GenericDataMapper
     }
     const query = squel.update({ autoQuoteFieldNames: true, autoQuoteTableNames: true })
       .table(this.tableName)
-      .setFields(object.dbRepresentation)
+      .setFields(this.dbWriter.generateDbRepresentation(object))
       .where(`${this.pkColumnName} = ?`, object.id)
       .toParam();
     query.text = query.text.concat(';');
     return from(
-      this.sql.query<void>(query.text, query.values, { cache: false }),
+      this.sql.query<void>(query.text, query.values, this.dbReader, { cache: false }),
     ).pipe(
-      map(() => ({ result: 'Success', data: object.cleanRepresentation })),
+      map(() => ({ result: 'Success', data: object })),
     ).toPromise();
   }
-
 }

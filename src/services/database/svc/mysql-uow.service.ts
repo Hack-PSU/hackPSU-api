@@ -1,11 +1,12 @@
 import { Inject, Injectable } from 'injection-js';
 import { MysqlError, PoolConnection } from 'mysql';
 import { defer, from, Observable } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { HttpError } from '../../../JSCommon/errors';
 import { Logger } from '../../logging/logging';
 import { ICacheService } from '../cache/cache';
 import { IConnectionFactory } from '../connection/connection-factory';
+import { IDbReadable } from '../index';
 import { IQueryOpts, IUow } from './uow.service';
 
 export enum SQL_ERRORS {
@@ -45,12 +46,13 @@ export class MysqlUow implements IUow {
    * @param query The query string to query with.
    * This function performs SQL escaping, so any substitutable parameters should be '?'s
    * @param params Parameters to substitute in the query
-   * @param opts
+   * @param dbReader Reader that converts database JSON to node objects
    * @return {Promise<any>}
    */
   public query<T>(
     query: string,
     params: Array<string | boolean | number> = [],
+    dbReader?: IDbReadable<T>,
     opts: IQueryOpts = { cache: false },
   ) {
     return this.connectionPromise
@@ -99,8 +101,9 @@ export class MysqlUow implements IUow {
         }),
         catchError((err: MysqlError) => {
           this.sqlErrorHandler(err);
-          return from('');
+          return from([]);
         }),
+        map((results: any[]) => dbReader ? results.map(result => dbReader.generateFromDbRepresentation(result)) : results),
       )
       .toPromise()
       // Gracefully convert MySQL errors to HTTP Errors

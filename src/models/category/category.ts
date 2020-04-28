@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+// tslint:disable:import-name
 import jsonAssetLoader from '../../assets/schemas/json-asset-loader';
 import BaseObject from '../BaseObject';
 
@@ -6,20 +6,11 @@ const categorySchema = jsonAssetLoader('categorySchema');
 
 export const TABLE_NAME = 'CATEGORY_LIST';
 
-/**
- * TODO: Add documentation
- */
-interface ICategoryApiModel {
-  uid: number;
-  categoryName: string;
-  isSponsor: boolean;
-}
-
 export class Category extends BaseObject {
 
   public uid: number;
-  public categoryName: string;
-  public isSponsor: boolean;
+  private categoryName: string;
+  private isSponsor: boolean;
 
   public get schema() {
     return categorySchema;
@@ -27,10 +18,36 @@ export class Category extends BaseObject {
   public get id() {
     return this.uid;
   }
-  constructor(data: ICategoryApiModel) {
+
+  public constructor() {
     super();
-    this.uid = data.uid;
-    this.categoryName = data.categoryName;
-    this.isSponsor = data.isSponsor;
+  }
+
+  public setUid(uid: number) {
+    this.uid = uid;
+    return this;
+  }
+
+  public setCategoryName(name: string) {
+    this.categoryName = name;
+    return this;
+  }
+
+  public setIsSponsor(isSponsor: boolean) {
+    this.isSponsor = isSponsor;
+    return this;
+  }
+
+  public getUid() {
+    return this.uid;
+  }
+
+  public getCategoryName() {
+    return this.categoryName;
+  }
+
+  public getIsSponsor() {
+    return this.isSponsor;
   }
 }
+
