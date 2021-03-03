@@ -112,7 +112,7 @@
     "mysql": "2.15.0",
     "node-cipher": "6.3.3",
     "node-time-uuid": "0.1.5",
-    "pug": "2.0.3",
+    "pug": "3.0.1",
     "random-number-csprng": "1.0.2",
     "reflect-metadata": "0.1.12",
     "request": "2.86.0",
