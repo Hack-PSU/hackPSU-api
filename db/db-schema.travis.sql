@@ -8,20 +8,20 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema test
+-- Schema travis
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `test` ;
+DROP SCHEMA IF EXISTS `travis` ;
 
 -- -----------------------------------------------------
--- Schema test
+-- Schema travis
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `test` DEFAULT CHARACTER SET utf8 ;
-USE `test` ;
+CREATE SCHEMA IF NOT EXISTS `travis` DEFAULT CHARACTER SET utf8 ;
+USE `travis` ;
 
 -- -----------------------------------------------------
--- Table `test`.`HACKATHON`
+-- Table `travis`.`HACKATHON`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`HACKATHON` (
+CREATE TABLE IF NOT EXISTS `travis`.`HACKATHON` (
   `uid` VARCHAR(45) NOT NULL,
   `name` VARCHAR(80) NOT NULL,
   `start_time` VARCHAR(45) NOT NULL,
@@ -34,9 +34,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`BUDGET_ITEM`
+-- Table `travis`.`BUDGET_ITEM`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`BUDGET_ITEM` (
+CREATE TABLE IF NOT EXISTS `travis`.`BUDGET_ITEM` (
   `uid` VARCHAR(45) NOT NULL,
   `team` ENUM('communication', 'design', 'education', 'entertainment', 'finance', 'logistics', 'marketing', 'sponsorship', 'technology') NOT NULL,
   `item_name` LONGTEXT NOT NULL,
@@ -50,16 +50,16 @@ CREATE TABLE IF NOT EXISTS `test`.`BUDGET_ITEM` (
   INDEX `idx_team` (`team` ASC),
   CONSTRAINT `fk_budget_item_hackathon_id`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`CATEGORY_LIST`
+-- Table `travis`.`CATEGORY_LIST`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`CATEGORY_LIST` (
+CREATE TABLE IF NOT EXISTS `travis`.`CATEGORY_LIST` (
   `uid` INT(11) NOT NULL DEFAULT '0',
   `categoryName` VARCHAR(100) NULL DEFAULT NULL,
   `isSponsor` TINYINT(1) NULL DEFAULT NULL,
@@ -71,9 +71,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`CHECKOUT_ITEMS`
+-- Table `travis`.`CHECKOUT_ITEMS`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`CHECKOUT_ITEMS` (
+CREATE TABLE IF NOT EXISTS `travis`.`CHECKOUT_ITEMS` (
   `uid` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(200) NOT NULL,
   `quantity` INT(11) NOT NULL DEFAULT '0',
@@ -84,9 +84,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`REGISTRATION`
+-- Table `travis`.`REGISTRATION`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`REGISTRATION` (
+CREATE TABLE IF NOT EXISTS `travis`.`REGISTRATION` (
   `uid` CHAR(36) NOT NULL,
   `firstname` VARCHAR(45) NOT NULL,
   `lastname` VARCHAR(45) NOT NULL,
@@ -114,13 +114,13 @@ CREATE TABLE IF NOT EXISTS `test`.`REGISTRATION` (
   `veteran` VARCHAR(15) NULL DEFAULT 'false',
   `pin` INT(11) NOT NULL AUTO_INCREMENT,
   `time` VARCHAR(45) NULL DEFAULT NULL,
-  `hackathon` VARCHAR(45) NOT NULL DEFAULT '0caffc937e1c4501bcb9d8d7db06ccbd',
+  `hackathon` VARCHAR(45) NOT NULL DEFAULT '84ed52ff52f84591aabe151666fae240',
   PRIMARY KEY (`uid`, `hackathon`),
   UNIQUE INDEX `pin_UNIQUE` (`pin` ASC),
   INDEX `hackathon_fkey_idx` (`hackathon` ASC),
   CONSTRAINT `reg_hackathon_fkey`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 AUTO_INCREMENT = 7785
@@ -128,9 +128,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`CHECKOUT_DATA`
+-- Table `travis`.`CHECKOUT_DATA`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`CHECKOUT_DATA` (
+CREATE TABLE IF NOT EXISTS `travis`.`CHECKOUT_DATA` (
   `uid` INT(11) NOT NULL AUTO_INCREMENT,
   `item_id` INT(11) NOT NULL,
   `user_id` CHAR(36) NULL DEFAULT NULL,
@@ -143,16 +143,16 @@ CREATE TABLE IF NOT EXISTS `test`.`CHECKOUT_DATA` (
   INDEX `checkout_hackathon_id_fk_idx` (`hackathon` ASC),
   CONSTRAINT `checkout_hackathon_id_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `checkout_item_id_fk`
     FOREIGN KEY (`item_id`)
-    REFERENCES `test`.`CHECKOUT_ITEMS` (`uid`)
+    REFERENCES `travis`.`CHECKOUT_ITEMS` (`uid`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `checkout_user_id_fk`
     FOREIGN KEY (`user_id`)
-    REFERENCES `test`.`REGISTRATION` (`uid`)
+    REFERENCES `travis`.`REGISTRATION` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -161,9 +161,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`EMAIL_HISTORY`
+-- Table `travis`.`EMAIL_HISTORY`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`EMAIL_HISTORY` (
+CREATE TABLE IF NOT EXISTS `travis`.`EMAIL_HISTORY` (
   `idEMAIL_HISTORY` INT(11) NOT NULL AUTO_INCREMENT,
   `sender` VARCHAR(36) NOT NULL,
   `recipient` VARCHAR(255) NOT NULL,
@@ -179,9 +179,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`LOCATIONS`
+-- Table `travis`.`LOCATIONS`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`LOCATIONS` (
+CREATE TABLE IF NOT EXISTS `travis`.`LOCATIONS` (
   `uid` INT(11) NOT NULL AUTO_INCREMENT,
   `location_name` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`uid`))
@@ -191,9 +191,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`EVENTS`
+-- Table `travis`.`EVENTS`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`EVENTS` (
+CREATE TABLE IF NOT EXISTS `travis`.`EVENTS` (
   `uid` VARCHAR(45) NOT NULL,
   `event_location` INT(11) NOT NULL,
   `event_start_time` VARCHAR(45) NOT NULL,
@@ -207,20 +207,20 @@ CREATE TABLE IF NOT EXISTS `test`.`EVENTS` (
   INDEX `events_hackathon_id_fk_idx` (`hackathon` ASC),
   CONSTRAINT `events_hackathon_id_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `fk_location`
     FOREIGN KEY (`event_location`)
-    REFERENCES `test`.`LOCATIONS` (`uid`)
+    REFERENCES `travis`.`LOCATIONS` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`EXTRA_CREDIT_CLASSES`
+-- Table `travis`.`EXTRA_CREDIT_CLASSES`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`EXTRA_CREDIT_CLASSES` (
+CREATE TABLE IF NOT EXISTS `travis`.`EXTRA_CREDIT_CLASSES` (
   `uid` INT(11) NOT NULL AUTO_INCREMENT,
   `class_name` VARCHAR(90) NOT NULL,
   PRIMARY KEY (`uid`))
@@ -230,9 +230,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`EXTRA_CREDIT_ASSIGNMENT`
+-- Table `travis`.`EXTRA_CREDIT_ASSIGNMENT`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`EXTRA_CREDIT_ASSIGNMENT` (
+CREATE TABLE IF NOT EXISTS `travis`.`EXTRA_CREDIT_ASSIGNMENT` (
   `uid` INT(11) NOT NULL AUTO_INCREMENT,
   `user_uid` CHAR(36) NOT NULL,
   `class_uid` INT(11) NOT NULL,
@@ -244,15 +244,15 @@ CREATE TABLE IF NOT EXISTS `test`.`EXTRA_CREDIT_ASSIGNMENT` (
   INDEX `fk_ec_hackathon_idx` (`hackathon` ASC),
   CONSTRAINT `fk_ec_class`
     FOREIGN KEY (`class_uid`)
-    REFERENCES `test`.`EXTRA_CREDIT_CLASSES` (`uid`)
+    REFERENCES `travis`.`EXTRA_CREDIT_CLASSES` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `fk_ec_hackathon`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `fk_ec_user`
     FOREIGN KEY (`user_uid`)
-    REFERENCES `test`.`REGISTRATION` (`uid`)
+    REFERENCES `travis`.`REGISTRATION` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 2376
@@ -260,9 +260,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`LIVE_UPDATES`
+-- Table `travis`.`LIVE_UPDATES`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`LIVE_UPDATES` (
+CREATE TABLE IF NOT EXISTS `travis`.`LIVE_UPDATES` (
   `uid` VARCHAR(45) NOT NULL,
   `update_text` LONGTEXT NOT NULL,
   `update_image` VARCHAR(500) NULL DEFAULT NULL,
@@ -277,9 +277,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`PI_TEST`
+-- Table `travis`.`PI_TEST`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`PI_TEST` (
+CREATE TABLE IF NOT EXISTS `travis`.`PI_TEST` (
   `idPI_TEST` INT(11) NOT NULL AUTO_INCREMENT,
   `time` INT(11) NULL DEFAULT NULL,
   `message` VARCHAR(45) NULL DEFAULT NULL,
@@ -290,9 +290,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`PRE_REGISTRATION`
+-- Table `travis`.`PRE_REGISTRATION`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`PRE_REGISTRATION` (
+CREATE TABLE IF NOT EXISTS `travis`.`PRE_REGISTRATION` (
   `uid` CHAR(36) NOT NULL DEFAULT '',
   `email` VARCHAR(255) CHARACTER SET 'utf8' NOT NULL,
   `hackathon` VARCHAR(45) NOT NULL,
@@ -302,16 +302,16 @@ CREATE TABLE IF NOT EXISTS `test`.`PRE_REGISTRATION` (
   INDEX `pre_reg_hackathon_id_fk_idx` (`hackathon` ASC),
   CONSTRAINT `pre_reg_hackathon_id_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`PROJECT_LIST`
+-- Table `travis`.`PROJECT_LIST`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`PROJECT_LIST` (
+CREATE TABLE IF NOT EXISTS `travis`.`PROJECT_LIST` (
   `projectID` CHAR(36) NOT NULL,
   `projectName` VARCHAR(50) NULL DEFAULT NULL,
   `hackathon` VARCHAR(45) NOT NULL,
@@ -319,16 +319,16 @@ CREATE TABLE IF NOT EXISTS `test`.`PROJECT_LIST` (
   INDEX `project_list_hackathon_fk_idx` (`hackathon` ASC),
   CONSTRAINT `project_list_hackathon_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`PROJECT_CATEGORIES`
+-- Table `travis`.`PROJECT_CATEGORIES`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`PROJECT_CATEGORIES` (
+CREATE TABLE IF NOT EXISTS `travis`.`PROJECT_CATEGORIES` (
   `projectID` CHAR(36) NOT NULL,
   `categoryID` INT(11) NOT NULL,
   PRIMARY KEY (`projectID`, `categoryID`),
@@ -336,18 +336,18 @@ CREATE TABLE IF NOT EXISTS `test`.`PROJECT_CATEGORIES` (
   INDEX `CATEGORY_LIST_ibfk_3_idx` (`categoryID` ASC),
   CONSTRAINT `CATEGORY_LIST_ibfk_3`
     FOREIGN KEY (`categoryID`)
-    REFERENCES `test`.`CATEGORY_LIST` (`uid`),
+    REFERENCES `travis`.`CATEGORY_LIST` (`uid`),
   CONSTRAINT `PROJECT_CATEGORIES_ibfk_1`
     FOREIGN KEY (`projectID`)
-    REFERENCES `test`.`PROJECT_LIST` (`projectID`))
+    REFERENCES `travis`.`PROJECT_LIST` (`projectID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`PROJECT_TEAM`
+-- Table `travis`.`PROJECT_TEAM`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`PROJECT_TEAM` (
+CREATE TABLE IF NOT EXISTS `travis`.`PROJECT_TEAM` (
   `userID` CHAR(36) NOT NULL,
   `projectID` CHAR(36) NOT NULL,
   PRIMARY KEY (`userID`, `projectID`),
@@ -355,18 +355,18 @@ CREATE TABLE IF NOT EXISTS `test`.`PROJECT_TEAM` (
   INDEX `PROJECT_TEAM_ibfk_2` (`projectID` ASC),
   CONSTRAINT `PROJECT_TEAM_ibfk_1`
     FOREIGN KEY (`userID`)
-    REFERENCES `test`.`REGISTRATION` (`uid`),
+    REFERENCES `travis`.`REGISTRATION` (`uid`),
   CONSTRAINT `PROJECT_TEAM_ibfk_2`
     FOREIGN KEY (`projectID`)
-    REFERENCES `test`.`PROJECT_LIST` (`projectID`))
+    REFERENCES `travis`.`PROJECT_LIST` (`projectID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`RECEIPT`
+-- Table `travis`.`RECEIPT`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`RECEIPT` (
+CREATE TABLE IF NOT EXISTS `travis`.`RECEIPT` (
   `uid` VARCHAR(45) NOT NULL,
   `url` LONGTEXT NOT NULL,
   `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -376,9 +376,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`REIMBURSEMENT`
+-- Table `travis`.`REIMBURSEMENT`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`REIMBURSEMENT` (
+CREATE TABLE IF NOT EXISTS `travis`.`REIMBURSEMENT` (
   `uid` VARCHAR(45) NOT NULL,
   `type` ENUM('PURCHASE_ORDER', 'REIMBURSEMENT') NOT NULL,
   `item_uid` VARCHAR(45) NOT NULL,
@@ -390,20 +390,20 @@ CREATE TABLE IF NOT EXISTS `test`.`REIMBURSEMENT` (
   INDEX `fk_reimbursement_receipt_id_idx` (`receipt_uid` ASC),
   CONSTRAINT `fk_reimbursement_item_id`
     FOREIGN KEY (`item_uid`)
-    REFERENCES `test`.`BUDGET_ITEM` (`uid`)
+    REFERENCES `travis`.`BUDGET_ITEM` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `fk_reimbursement_receipt_id`
     FOREIGN KEY (`receipt_uid`)
-    REFERENCES `test`.`RECEIPT` (`uid`)
+    REFERENCES `travis`.`RECEIPT` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`REQ_DATA`
+-- Table `travis`.`REQ_DATA`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`REQ_DATA` (
+CREATE TABLE IF NOT EXISTS `travis`.`REQ_DATA` (
   `idREQ_DATA` VARCHAR(36) NOT NULL,
   `req_time` VARCHAR(45) NOT NULL,
   `req_ip` VARCHAR(45) NOT NULL,
@@ -416,9 +416,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`RFID_ASSIGNMENTS`
+-- Table `travis`.`RFID_ASSIGNMENTS`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`RFID_ASSIGNMENTS` (
+CREATE TABLE IF NOT EXISTS `travis`.`RFID_ASSIGNMENTS` (
   `rfid_uid` VARCHAR(70) NOT NULL,
   `user_uid` CHAR(36) NOT NULL,
   `time` VARCHAR(45) NULL DEFAULT NULL,
@@ -429,11 +429,11 @@ CREATE TABLE IF NOT EXISTS `test`.`RFID_ASSIGNMENTS` (
   INDEX `rfid_assignment_user_uid_fkey_idx` (`user_uid` ASC),
   CONSTRAINT `rfid_assignment_hackathon_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `rfid_assignment_user_uid_fkey`
     FOREIGN KEY (`user_uid`)
-    REFERENCES `test`.`REGISTRATION` (`uid`)
+    REFERENCES `travis`.`REGISTRATION` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -441,9 +441,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`RSVP`
+-- Table `travis`.`RSVP`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`RSVP` (
+CREATE TABLE IF NOT EXISTS `travis`.`RSVP` (
   `user_id` CHAR(36) NOT NULL,
   `rsvp_time` VARCHAR(45) NOT NULL,
   `rsvp_status` TINYINT(4) NOT NULL DEFAULT '0',
@@ -452,20 +452,20 @@ CREATE TABLE IF NOT EXISTS `test`.`RSVP` (
   INDEX `rsvp_hackathon_id_fk_idx` (`hackathon` ASC),
   CONSTRAINT `rsvp_hackathon_id_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `user_id_fk`
     FOREIGN KEY (`user_id`)
-    REFERENCES `test`.`REGISTRATION` (`uid`)
+    REFERENCES `travis`.`REGISTRATION` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`SCANS`
+-- Table `travis`.`SCANS`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`SCANS` (
+CREATE TABLE IF NOT EXISTS `travis`.`SCANS` (
   `idSCANS` INT(11) NOT NULL AUTO_INCREMENT,
   `rfid_uid` VARCHAR(70) NOT NULL,
   `scan_location` INT(11) NULL DEFAULT NULL,
@@ -480,20 +480,20 @@ CREATE TABLE IF NOT EXISTS `test`.`SCANS` (
   INDEX `scans_event_fk_idx` (`scan_event` ASC),
   CONSTRAINT `fk_location_scan`
     FOREIGN KEY (`scan_location`)
-    REFERENCES `test`.`LOCATIONS` (`uid`)
+    REFERENCES `travis`.`LOCATIONS` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `rfid_uid_fk`
     FOREIGN KEY (`rfid_uid`)
-    REFERENCES `test`.`RFID_ASSIGNMENTS` (`rfid_uid`)
+    REFERENCES `travis`.`RFID_ASSIGNMENTS` (`rfid_uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `scans_event_fk`
     FOREIGN KEY (`scan_event`)
-    REFERENCES `test`.`EVENTS` (`uid`)
+    REFERENCES `travis`.`EVENTS` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `scans_hackathon_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 5487
@@ -501,9 +501,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`TABLE_SUPPORT`
+-- Table `travis`.`TABLE_SUPPORT`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`TABLE_SUPPORT` (
+CREATE TABLE IF NOT EXISTS `travis`.`TABLE_SUPPORT` (
   `tableID` INT(11) NOT NULL,
   `categoryID` INT(11) NOT NULL,
   `priority` TINYINT(1) NULL DEFAULT NULL,
@@ -513,19 +513,19 @@ CREATE TABLE IF NOT EXISTS `test`.`TABLE_SUPPORT` (
   INDEX `table_support_hackathon_fk_idx` (`hackathon` ASC),
   CONSTRAINT `TABLE_SUPPORT_ibfk_2`
     FOREIGN KEY (`categoryID`)
-    REFERENCES `test`.`CATEGORY_LIST` (`uid`),
+    REFERENCES `travis`.`CATEGORY_LIST` (`uid`),
   CONSTRAINT `table_support_hackathon_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`TABLE_ASSIGNMENTS`
+-- Table `travis`.`TABLE_ASSIGNMENTS`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`TABLE_ASSIGNMENTS` (
+CREATE TABLE IF NOT EXISTS `travis`.`TABLE_ASSIGNMENTS` (
   `tableNumber` INT(11) NOT NULL,
   `projectID` CHAR(36) NOT NULL,
   `hackathon` VARCHAR(45) NOT NULL,
@@ -533,20 +533,20 @@ CREATE TABLE IF NOT EXISTS `test`.`TABLE_ASSIGNMENTS` (
   INDEX `table_assignment_hackathon_fk_idx` (`hackathon` ASC),
   CONSTRAINT `TABLE_ASSIGNMENTS_ibfk_2`
     FOREIGN KEY (`tableNumber`)
-    REFERENCES `test`.`TABLE_SUPPORT` (`tableID`)
+    REFERENCES `travis`.`TABLE_SUPPORT` (`tableID`)
     ON UPDATE CASCADE,
   CONSTRAINT `table_assignment_hackathon_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `test`.`TRAVEL_REIMBURSEMENT`
+-- Table `travis`.`TRAVEL_REIMBURSEMENT`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`TRAVEL_REIMBURSEMENT` (
+CREATE TABLE IF NOT EXISTS `travis`.`TRAVEL_REIMBURSEMENT` (
   `uid` VARCHAR(45) NOT NULL,
   `fullname` VARCHAR(90) NOT NULL,
   `reimbursement_amount` INT(11) NOT NULL,
@@ -561,33 +561,33 @@ CREATE TABLE IF NOT EXISTS `test`.`TRAVEL_REIMBURSEMENT` (
   INDEX `travel_reimb_hackathon_fk_idx` (`hackathon` ASC),
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `test`.`REGISTRATION` (`uid`)
+    REFERENCES `travis`.`REGISTRATION` (`uid`)
     ON UPDATE CASCADE,
   CONSTRAINT `travel_reimb_hackathon_fk`
     FOREIGN KEY (`hackathon`)
-    REFERENCES `test`.`HACKATHON` (`uid`)
+    REFERENCES `travis`.`HACKATHON` (`uid`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
-USE `test` ;
+USE `travis` ;
 
 -- -----------------------------------------------------
--- Placeholder table for view `test`.`ATTENDANCE`
+-- Placeholder table for view `travis`.`ATTENDANCE`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`ATTENDANCE` (`idSCANS` INT, `scan_time` INT, `user_uid` INT, `event_uid` INT, `event_start_time` INT, `event_end_time` INT, `event_title` INT, `event_description` INT, `event_type` INT, `hackathon_id` INT, `hackathon_name` INT, `hackathon_start_time` INT, `hackathon_end_time` INT, `hackathon_base_pin` INT, `hackathon_active` INT);
+CREATE TABLE IF NOT EXISTS `travis`.`ATTENDANCE` (`idSCANS` INT, `scan_time` INT, `user_uid` INT, `event_uid` INT, `event_start_time` INT, `event_end_time` INT, `event_title` INT, `event_description` INT, `event_type` INT, `hackathon_id` INT, `hackathon_name` INT, `hackathon_start_time` INT, `hackathon_end_time` INT, `hackathon_base_pin` INT, `hackathon_active` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `test`.`ATTENDANCE_LEGACY`
+-- Placeholder table for view `travis`.`ATTENDANCE_LEGACY`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test`.`ATTENDANCE_LEGACY` (`idSCANS` INT, `scan_location` INT, `scan_time` INT, `user_uid` INT, `location_name` INT, `event_uid` INT, `event_start_time` INT, `event_end_time` INT, `event_title` INT, `event_description` INT, `event_type` INT, `hackathon_id` INT, `hackathon_name` INT, `hackathon_start_time` INT, `hackathon_end_time` INT, `hackathon_base_pin` INT, `hackathon_active` INT);
+CREATE TABLE IF NOT EXISTS `travis`.`ATTENDANCE_LEGACY` (`idSCANS` INT, `scan_location` INT, `scan_time` INT, `user_uid` INT, `location_name` INT, `event_uid` INT, `event_start_time` INT, `event_end_time` INT, `event_title` INT, `event_description` INT, `event_type` INT, `hackathon_id` INT, `hackathon_name` INT, `hackathon_start_time` INT, `hackathon_end_time` INT, `hackathon_base_pin` INT, `hackathon_active` INT);
 
 -- -----------------------------------------------------
 -- procedure assignTable
 -- -----------------------------------------------------
 
 DELIMITER $$
-USE `test`$$
+USE `travis`$$
 CREATE DEFINER=`hackpsudev`@`%` PROCEDURE `assignTable`(in projectID_param char(36), in categoryID_param int(11), out tableNumber_param int(11))
 begin
 	
@@ -613,7 +613,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 
 DELIMITER $$
-USE `test`$$
+USE `travis`$$
 CREATE DEFINER=`hackpsudev`@`%` PROCEDURE `assignTeam`(in projectName_param varchar(50), in teamUIDs_param longtext, in projectCategories_param longtext, out projectID_param varchar(45))
 proc_lbl:begin
 	
@@ -732,18 +732,18 @@ end$$
 DELIMITER ;
 
 -- -----------------------------------------------------
--- View `test`.`ATTENDANCE`
+-- View `travis`.`ATTENDANCE`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `test`.`ATTENDANCE`;
-USE `test`;
-CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`hackpsudev`@`%` SQL SECURITY DEFINER VIEW `test`.`ATTENDANCE` AS select `test`.`SCANS`.`idSCANS` AS `idSCANS`,`test`.`SCANS`.`scan_time` AS `scan_time`,`test`.`RFID_ASSIGNMENTS`.`user_uid` AS `user_uid`,`test`.`EVENTS`.`uid` AS `event_uid`,`test`.`EVENTS`.`event_start_time` AS `event_start_time`,`test`.`EVENTS`.`event_end_time` AS `event_end_time`,`test`.`EVENTS`.`event_title` AS `event_title`,`test`.`EVENTS`.`event_description` AS `event_description`,`test`.`EVENTS`.`event_type` AS `event_type`,`test`.`HACKATHON`.`uid` AS `hackathon_id`,`test`.`HACKATHON`.`name` AS `hackathon_name`,`test`.`HACKATHON`.`start_time` AS `hackathon_start_time`,`test`.`HACKATHON`.`end_time` AS `hackathon_end_time`,`test`.`HACKATHON`.`base_pin` AS `hackathon_base_pin`,`test`.`HACKATHON`.`active` AS `hackathon_active` from (((`test`.`RFID_ASSIGNMENTS` join `test`.`SCANS` on((`test`.`RFID_ASSIGNMENTS`.`rfid_uid` = `test`.`SCANS`.`rfid_uid`))) join `test`.`EVENTS` on((`test`.`SCANS`.`scan_event` = `test`.`EVENTS`.`uid`))) join `test`.`HACKATHON` on((`test`.`RFID_ASSIGNMENTS`.`hackathon` = `test`.`HACKATHON`.`uid`))) order by `test`.`SCANS`.`scan_time`;
+DROP TABLE IF EXISTS `travis`.`ATTENDANCE`;
+USE `travis`;
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`hackpsudev`@`%` SQL SECURITY DEFINER VIEW `travis`.`ATTENDANCE` AS select `travis`.`SCANS`.`idSCANS` AS `idSCANS`,`travis`.`SCANS`.`scan_time` AS `scan_time`,`travis`.`RFID_ASSIGNMENTS`.`user_uid` AS `user_uid`,`travis`.`EVENTS`.`uid` AS `event_uid`,`travis`.`EVENTS`.`event_start_time` AS `event_start_time`,`travis`.`EVENTS`.`event_end_time` AS `event_end_time`,`travis`.`EVENTS`.`event_title` AS `event_title`,`travis`.`EVENTS`.`event_description` AS `event_description`,`travis`.`EVENTS`.`event_type` AS `event_type`,`travis`.`HACKATHON`.`uid` AS `hackathon_id`,`travis`.`HACKATHON`.`name` AS `hackathon_name`,`travis`.`HACKATHON`.`start_time` AS `hackathon_start_time`,`travis`.`HACKATHON`.`end_time` AS `hackathon_end_time`,`travis`.`HACKATHON`.`base_pin` AS `hackathon_base_pin`,`travis`.`HACKATHON`.`active` AS `hackathon_active` from (((`travis`.`RFID_ASSIGNMENTS` join `travis`.`SCANS` on((`travis`.`RFID_ASSIGNMENTS`.`rfid_uid` = `travis`.`SCANS`.`rfid_uid`))) join `travis`.`EVENTS` on((`travis`.`SCANS`.`scan_event` = `travis`.`EVENTS`.`uid`))) join `travis`.`HACKATHON` on((`travis`.`RFID_ASSIGNMENTS`.`hackathon` = `travis`.`HACKATHON`.`uid`))) order by `travis`.`SCANS`.`scan_time`;
 
 -- -----------------------------------------------------
--- View `test`.`ATTENDANCE_LEGACY`
+-- View `travis`.`ATTENDANCE_LEGACY`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `test`.`ATTENDANCE_LEGACY`;
-USE `test`;
-CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`hackpsudev`@`%` SQL SECURITY DEFINER VIEW `test`.`ATTENDANCE_LEGACY` AS select `test`.`SCANS`.`idSCANS` AS `idSCANS`,`test`.`SCANS`.`scan_location` AS `scan_location`,`test`.`SCANS`.`scan_time` AS `scan_time`,`test`.`RFID_ASSIGNMENTS`.`user_uid` AS `user_uid`,`test`.`LOCATIONS`.`location_name` AS `location_name`,`test`.`EVENTS`.`uid` AS `event_uid`,`test`.`EVENTS`.`event_start_time` AS `event_start_time`,`test`.`EVENTS`.`event_end_time` AS `event_end_time`,`test`.`EVENTS`.`event_title` AS `event_title`,`test`.`EVENTS`.`event_description` AS `event_description`,`test`.`EVENTS`.`event_type` AS `event_type`,`test`.`HACKATHON`.`uid` AS `hackathon_id`,`test`.`HACKATHON`.`name` AS `hackathon_name`,`test`.`HACKATHON`.`start_time` AS `hackathon_start_time`,`test`.`HACKATHON`.`end_time` AS `hackathon_end_time`,`test`.`HACKATHON`.`base_pin` AS `hackathon_base_pin`,`test`.`HACKATHON`.`active` AS `hackathon_active` from ((((`test`.`RFID_ASSIGNMENTS` join `test`.`SCANS` on((`test`.`RFID_ASSIGNMENTS`.`rfid_uid` = `test`.`SCANS`.`rfid_uid`))) join `test`.`LOCATIONS` on((`test`.`SCANS`.`scan_location` = `test`.`LOCATIONS`.`uid`))) join `test`.`EVENTS` on(((`test`.`LOCATIONS`.`uid` = `test`.`EVENTS`.`event_location`) and (cast(`test`.`SCANS`.`scan_time` as unsigned) between cast((`test`.`EVENTS`.`event_start_time` - 900000) as unsigned) and cast((`test`.`EVENTS`.`event_end_time` - 300000) as unsigned)) and (`test`.`EVENTS`.`event_type` in ('workshop','food'))))) join `test`.`HACKATHON` on((`test`.`RFID_ASSIGNMENTS`.`hackathon` = `test`.`HACKATHON`.`uid`))) order by `test`.`SCANS`.`scan_time`;
+DROP TABLE IF EXISTS `travis`.`ATTENDANCE_LEGACY`;
+USE `travis`;
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`hackpsudev`@`%` SQL SECURITY DEFINER VIEW `travis`.`ATTENDANCE_LEGACY` AS select `travis`.`SCANS`.`idSCANS` AS `idSCANS`,`travis`.`SCANS`.`scan_location` AS `scan_location`,`travis`.`SCANS`.`scan_time` AS `scan_time`,`travis`.`RFID_ASSIGNMENTS`.`user_uid` AS `user_uid`,`travis`.`LOCATIONS`.`location_name` AS `location_name`,`travis`.`EVENTS`.`uid` AS `event_uid`,`travis`.`EVENTS`.`event_start_time` AS `event_start_time`,`travis`.`EVENTS`.`event_end_time` AS `event_end_time`,`travis`.`EVENTS`.`event_title` AS `event_title`,`travis`.`EVENTS`.`event_description` AS `event_description`,`travis`.`EVENTS`.`event_type` AS `event_type`,`travis`.`HACKATHON`.`uid` AS `hackathon_id`,`travis`.`HACKATHON`.`name` AS `hackathon_name`,`travis`.`HACKATHON`.`start_time` AS `hackathon_start_time`,`travis`.`HACKATHON`.`end_time` AS `hackathon_end_time`,`travis`.`HACKATHON`.`base_pin` AS `hackathon_base_pin`,`travis`.`HACKATHON`.`active` AS `hackathon_active` from ((((`travis`.`RFID_ASSIGNMENTS` join `travis`.`SCANS` on((`travis`.`RFID_ASSIGNMENTS`.`rfid_uid` = `travis`.`SCANS`.`rfid_uid`))) join `travis`.`LOCATIONS` on((`travis`.`SCANS`.`scan_location` = `travis`.`LOCATIONS`.`uid`))) join `travis`.`EVENTS` on(((`travis`.`LOCATIONS`.`uid` = `travis`.`EVENTS`.`event_location`) and (cast(`travis`.`SCANS`.`scan_time` as unsigned) between cast((`travis`.`EVENTS`.`event_start_time` - 900000) as unsigned) and cast((`travis`.`EVENTS`.`event_end_time` - 300000) as unsigned)) and (`travis`.`EVENTS`.`event_type` in ('workshop','food'))))) join `travis`.`HACKATHON` on((`travis`.`RFID_ASSIGNMENTS`.`hackathon` = `travis`.`HACKATHON`.`uid`))) order by `travis`.`SCANS`.`scan_time`;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
