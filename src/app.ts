@@ -122,7 +122,7 @@ export class App extends ParentRouter {
   private securityConfig() {
     // WHITELIST: Allow any subdomain of hackpsu.org or hackpsu.com
     // For testing allow any domain starting with localhost:<PORT>
-    const whitelist = /^((https:\/\/)?((.*)\.)?hackpsu.(com|org))|(http:\/\/localhost:?\d*)$/;
+    const whitelist = /^((https:\/\/)?((.*)\.)?hackpsu.(com|org))|(http:\/\/localhost:?\d*)$|(^(https:\/\/)?(.*)-hackpsu.vercel.app$)/;
     const corsOptions = {
       origin: (origin, callback) => {
         if (whitelist.test(origin) || Util.getCurrentEnv() !== Environment.PRODUCTION) {
